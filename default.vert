@@ -8,6 +8,7 @@ layout (location = 3) in vec3 aNor;
 out vec3 fPos;
 out vec2 tPos;
 out vec3 fNor;
+out vec3 fCol;
 
 uniform mat4 camera;
 uniform mat4 model;
@@ -18,4 +19,5 @@ void main()
 	gl_Position = camera * vec4(fPos, 1.0f);
 	fNor = aNor;
 	tPos = tCor;
+	fCol = (aNor + vec3(1.0f))/2.0f;
 }

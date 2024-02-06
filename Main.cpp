@@ -6,6 +6,7 @@
 #include <glfw/GLFW3.h>
 #include <stb/stb_image.h>
 #include <glm/glm.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 #include "ShaderClass.h"
 #include "Texture.h"
@@ -44,19 +45,19 @@ int main()
 	//cai nay cho thang opengl biet nen dung phan nao
 	//vd phan minh cho no la 500x500 tren tong 1000x800 cua window
 	//copy toi day
-	GLfloat verts[] =
+	GLfloat Overts[] =
 	{
 		 0.0f, 0.0f, 0.0f,     1.0f, 0.0f, 0.0f,	 0.0f, 0.0f,	 0.0f, 0.0f, 1.0f,
-		 0.0f, 5.0f, 0.0f,     0.0f, 1.0f, 0.0f,	 0.0f, 1.0f,	 0.0f, 0.0f, 1.0f,
-		 5.0f, 5.0f, 0.0f,	   0.0f, 0.0f, 1.0f,	 1.0f, 1.0f,	 0.0f, 0.0f, 1.0f,
-		 5.0f, 0.0f, 0.0f,     1.0f, 1.0f, 1.0f,	 1.0f, 0.0f,	 0.0f, 0.0f, 1.0f,
+		 0.0f, 1.0f, 0.0f,     0.0f, 1.0f, 0.0f,	 0.0f, 1.0f,	 0.0f, 0.0f, 1.0f,
+		 1.0f, 1.0f, 0.0f,	   0.0f, 0.0f, 1.0f,	 1.0f, 1.0f,	 0.0f, 0.0f, 1.0f,
+		 1.0f, 0.0f, 0.0f,     1.0f, 1.0f, 1.0f,	 1.0f, 0.0f,	 0.0f, 0.0f, 1.0f,
 
 		 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,	 0.0f, 0.0f,	 0.0f, 0.0f, 1.0f,
 		 0.0f, 1.0f, 1.0f,     1.0f, 0.0f, 1.0f,	 0.0f, 1.0f,	 0.0f, 0.0f, 1.0f,
 		 1.0f, 1.0f, 1.0f,	   1.0f, 1.0f, 0.0f,	 1.0f, 1.0f,	 0.0f, 0.0f, 1.0f,
 		 1.0f, 0.0f, 1.0f,     0.0f, 0.0f, 0.0f,	 1.0f, 0.0f,	 0.0f, 0.0f, 1.0f,
 	};
-	GLushort indices[] =
+	GLushort Oindices[] =
 	{
 		 0, 1, 2,
 		 0, 2, 3,
@@ -70,9 +71,39 @@ int main()
 		 1, 6, 2,
 		 4, 0, 3,
 		 4, 3, 7,
-		 
 	};
-
+	GLfloat verts[36*11] = {};
+	GLushort indices[36] = {};
+	for (int i = 0; i < (36); i++) indices[i] = i;
+	
+	for (int i = 0; i < (36) / 3; i++)
+	{
+		vec3 fvec = vec3(Overts[Oindices[i*3] * 11] - Overts[Oindices[i*3 + 1] * 11], Overts[Oindices[i*3] * 11 + 1] - Overts[Oindices[i*3 + 1] * 11 + 1], Overts[Oindices[i*3] * 11 + 2] - Overts[Oindices[i*3 + 1] * 11 + 2]);
+		vec3 svec = vec3(Overts[Oindices[i*3 + 2] * 11] - Overts[Oindices[i*3 + 1] * 11], Overts[Oindices[i*3 + 2] * 11 + 1] - Overts[Oindices[i*3 + 1] * 11 + 1], Overts[Oindices[i*3 + 2] * 11 + 2] - Overts[Oindices[i*3 + 1] * 11 + 2]);
+		vec3 normal = glm::normalize(glm::cross(svec,fvec));
+		
+		for (int t = 0; t < 3; t++)
+		{
+			for (int j = (i*3 + t) * 11; j < (i*3 + t) * 11 + 8; j++)
+			{
+				verts[j] = Overts[(Oindices[i*3+t]-i*3-t)*11+j];
+			}
+			//verts[(i*3 + t) * 11 + 6] = normal.x;
+			//verts[(i*3 + t) * 11 + 7] = normal.x;
+			verts[(i*3 + t) * 11 + 8] = normal.x;
+			verts[(i*3 + t) * 11 + 9] = normal.y;
+			verts[(i*3 + t) * 11 + 10] = normal.z;
+		}
+	}
+	for (int i = 0; i < 36; i++)
+	{
+		for (int j = 0; j < 11; j++)
+		{
+			cout << verts[i * 11 + j] << " ";
+		}
+		cout << "\n";
+	}
+	cout << -1;
 	double tStart, tEnd;
 
 	Shader ShaderProgram("default.vert", "default.frag");
@@ -109,7 +140,6 @@ int main()
 	cheese.linkTex(ShaderProgram, "tex0");
 
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lDir"), 1, &normalize(vec3(-1.0f))[0]);
-	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lPos"), 1, &vec3(3.0f)[0]);
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lCol"), 1, &vec3(1.0f, 1.0f, 1.0f)[0]);
 
 	GLint hasCompiled;
@@ -125,6 +155,7 @@ int main()
 	ShaderProgram.Activate();
 	glfwSetCursorPos(window, (double)sWidth / 2, (double)sHeight / 2);
 	tStart = glfwGetTime();
+	vec3 lPos = vec3(1.0f,-1.0f,1.0f);
 	while (!glfwWindowShouldClose(window)&&!(glfwGetKey(window,GLFW_KEY_BACKSPACE)==GLFW_PRESS))
 	{
 		tEnd = glfwGetTime();
@@ -132,10 +163,12 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//ShaderProgram.Activate();
 		Camera.cMatrix(45.0f, 0.1f, 100.0f, cameraID);
+		lPos=rotate(lPos, radians(1.0f), vec3(1.0f));
+		glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lPos"), 1, &lPos[0]);
 		Camera.cInput(window,tEnd-tStart);
 		glUniform3fv(cPosID, 1, &Camera.cPosition[0]);
 		_VAO.Bind();
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+		glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(GLushort), GL_UNSIGNED_SHORT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		tStart = tEnd;
