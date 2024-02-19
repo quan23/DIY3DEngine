@@ -7,26 +7,49 @@ in vec3 fNor;
 in vec3 fCol;
 
 uniform sampler2D tex0;
-//uniform vec3 lDir;
+uniform sampler2D tex1;
+uniform vec3 lDir;
 uniform vec3 lPos;
 uniform vec3 lCol;
 uniform vec3 cPos;
 
-void main()
+vec3 cDir,Nor;
+vec4 tCol,fSpe;
+
+vec4 PointLight(vec3 nlPos)
 {
-    vec3 lDir = normalize(lPos - fPos);
+    vec3 lVec = nlPos - fPos;
+    float lDis = length(lVec);
+    float lSte = 1.0f/(0.1f*pow(lDis,2)+0.05f*lDis+1.0f);
+    vec3 lDir = normalize(lVec);
     //vec3 lDir = normalize(vec3(-1.0f));
-    //vec3 Nor = normalize(fNor);
-    vec3 Nor = normalize(fPos-0.5f);
+    //vec3 Nor = normalize(fPos-0.5f);
+    float diffuse = max(dot(Nor, lDir), 0.0f)*lSte;
+
+    vec3 refl = normalize(reflect(-lDir,Nor));
+    float glae = pow(max(dot(refl,cDir),0.0f),8)*0.5f;
+
+    return vec4(lCol * (diffuse + fSpe.r * glae),1.0f);
+}
+
+vec4 SkyLight()
+{
+    float ambi = 0.1f;
+    vec3 lDir = normalize(lDir);
     float diffuse = max(dot(Nor, lDir), 0.0f);
 
-    vec3 cDir = normalize(cPos-fPos);
     vec3 refl = normalize(reflect(-lDir,Nor));
-    float glae = pow(max(dot(refl,cDir),0.0f),16)*0.5f;
+    float glae = pow(max(dot(refl,cDir),0.0f),8)*0.5f;
 
-    float ambi = 0.2f;
-    //vec4 tCol = texture(tex0, tPos);
-    vec4 tCol = vec4(1.0f);
-    tCol.xyz = tCol.xyz * lCol * (diffuse + glae + ambi);
-    FragColor = tCol;
+    return vec4(lCol * (diffuse + ambi + fSpe.r * glae),1.0f);
+}
+
+void main()
+{
+    Nor = normalize(fNor);
+    cDir = normalize(cPos-fPos);
+    //tCol = texture(tex0, tPos);
+    //fSpe = texture(tex1, tPos);
+    vec3 tCol = fCol;
+    FragColor = vec4(tCol,1.0f);
 }

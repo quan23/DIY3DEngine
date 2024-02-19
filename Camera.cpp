@@ -17,11 +17,11 @@ void camera::cInput(GLFWwindow* window, double fram)
 	float step = speed * fram;
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		cPosition += cOrientation*step;
+		cPosition += glm::normalize(glm::vec3(cOrientation.x,0.0f, cOrientation.z))*step;
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		cPosition -= cOrientation*step;
+		cPosition -= glm::normalize(glm::vec3(cOrientation.x, 0.0f, cOrientation.z)) *step;
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
@@ -42,10 +42,15 @@ void camera::cInput(GLFWwindow* window, double fram)
 	glfwSetInputMode(window, GLFW_CURSOR,GLFW_CURSOR_HIDDEN);
 	double mouseX, mouseY;
 	glfwGetCursorPos(window, &mouseX, &mouseY);
-	mouseX = sensitivity*(mouseX - (float)cWidth / 2)/cWidth;
-	mouseY = sensitivity*(mouseY - (float)cHeight / 2)/cHeight;
-	cOrientation = glm::rotate(cOrientation, (float)glm::radians(mouseX), -cUp);
-	cOrientation = glm::rotate(cOrientation, (float)glm::radians(mouseY), -glm::normalize(glm::cross(cOrientation,cUp)));
+	mouseX = Xsensitivity*(mouseX - (float)cWidth / 2);
+	mouseY = Ysensitivity*(mouseY - (float)cHeight / 2);
+	yaw += mouseX;
+	pitch += mouseY;
+	if (pitch > 89.0f) pitch = 89.0f;
+	if (pitch <-89.0f) pitch =-89.0f;
+	cOrientation.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cOrientation.y =-sin(glm::radians(pitch));
+	cOrientation.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 	cOrientation = glm::normalize(cOrientation);
 	glfwSetCursorPos(window, (double)cWidth/2, (double)cHeight/2);
 

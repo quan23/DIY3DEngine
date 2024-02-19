@@ -10,9 +10,10 @@ class Texture
 	public:
 		GLuint ID;
 		GLenum type;
+		GLenum slot;
 
 		Texture(const char* iName, GLenum iType, GLenum slot, GLenum format, GLenum bytetype);
-		void linkTex(Shader& shader, const char* texID);
+		void linkTex(Shader& shader, const char* texID, GLint unit);
 		void Bind();
 		void Unbind();
 		void Delete();

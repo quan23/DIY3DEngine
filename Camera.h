@@ -16,9 +16,10 @@ class camera
 		glm::vec3 cUp = glm::vec3(0.0f, 1.0f, 0.0f);
 		int cWidth, cHeight;
 
-		float speed = 5.0f, sensitivity = 100.0f;
+		float speed = 5.0f, Xsensitivity = 0.5f, Ysensitivity = 0.5f;
+		float yaw = 0.0f, pitch = 0.0f;
 	
-		camera(int Width, int Height, glm::vec3 position);
+		camera(int Width, int Height, glm::vec3 position = glm::vec3(0.0f));
 		void cMatrix(float Fov, float fNear, float fFar, GLuint uniformID);
 		void cInput(GLFWwindow* window, double fram);
 };

@@ -1,13 +1,13 @@
 #include "Texture.h"
 
-Texture::Texture(const char* iName, GLenum iType, GLenum slot, GLenum format, GLenum bytetype)
+Texture::Texture(const char* iName, GLenum iType, GLenum islot, GLenum format, GLenum bytetype)
 {
 	int iWidth, iHeight, numColCh;
 	type = iType;
 	unsigned char* iData = stbi_load(iName, &iWidth, &iHeight, &numColCh, 0);
-
+	slot = islot;
 	glGenTextures(1, &ID);
-	glActiveTexture(slot);
+	glActiveTexture(islot);
 	glBindTexture(iType, ID);
 
 	glTexParameteri(iType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -23,15 +23,16 @@ Texture::Texture(const char* iName, GLenum iType, GLenum slot, GLenum format, GL
 	glBindTexture(iType, 0);
 }
 
-void Texture::linkTex(Shader& shader, const char* texID)
+void Texture::linkTex(Shader& shader, const char* texID, GLint unit)
 {
-	GLuint tex0ID = glGetUniformLocation(shader.ID, texID);
+	GLuint texLoca = glGetUniformLocation(shader.ID, texID);
 	shader.Activate();
-	glUniform1i(tex0ID, 0);
+	glUniform1i(texLoca, unit);
 }
 
 void Texture::Bind()
 {
+	glActiveTexture(slot);
 	glBindTexture(type, ID);
 }
 
