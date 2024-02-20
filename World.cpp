@@ -1,35 +1,55 @@
+#include "Chunk.h"
 #include "World.h"
+
 
 World::World(GLuint ShaderProgram) : ShaderProgram(ShaderProgram)
 {
 }
 
-unsigned long long World::ChunkPos(Chunk::worldCoor coor)
+unsigned long long World::ChunkPos(worldCoor coor)
 {
-	return (long long)(coor.x & 0xffffff) + ((long long)(coor.z & 0xffffff) << 24) + ((unsigned long long)(coor.z & 0xfff) << 48);
+	unsigned long long worldPos = (coor.x + 0x7fffff) & 0xffffff;
+	worldPos <<= 16;
+	worldPos += (coor.y + 0x7fff) & 0xffff;
+	worldPos <<= 24;
+	worldPos += (coor.z + 0x7fffff) & 0xffffff;
+	return worldPos;
 }
 
-void World::loadWorld(Chunk::worldCoor Center, GLushort radian)
+void World::loadWorld(worldCoor Center, GLushort radian)
 {
-	for (int x = Center.x - radian; x < Center.x + radian; x++)
+	for (int x = Center.x - radian; x <= Center.x + radian; x++)
 	{
-		for (int y = Center.y - radian; y < Center.y + radian; y++)
+		for (int y = Center.y - radian; y <= Center.y + radian; y++)
+		//for (int y = 0; y <= 0; y++)
 		{
-			for (int z = Center.z - radian; z < Center.z + radian; z++)
+			for (int z = Center.z - radian; z <= Center.z + radian; z++)
 			{
-				if (worldMap[ChunkPos(Chunk::worldCoor(x, y, z))] == nullptr)
+				if (worldMap[ChunkPos(worldCoor(x, y, z))] == NULL)
 				{
 					addChunk(x, y, z);
 					//std::cout << "-1\n";
 				}
-				if (!worldMap[ChunkPos(Chunk::worldCoor(x, y, z))]->EmptyChunk && worldMap[ChunkPos(Chunk::worldCoor(x, y, z))]->ChunkDoRender)
+				if (!worldMap[ChunkPos(worldCoor(x, y, z))]->EmptyChunk)
 				{
-					renderChunk.push_back(worldMap[ChunkPos(Chunk::worldCoor(x, y, z))]);
+					addedChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z))]);
 				}
-				std::cout << worldMap[ChunkPos(Chunk::worldCoor(x, y, z))]->ChunkCoor;
+				//std::cout << worldMap[ChunkPos(worldCoor(x, y, z))]->ChunkCoor << "\n";
 			}
 		}
 	}
+	//std::cout << renderChunk.size();
+	//std::cout << addedChunk.size();
+	for (Chunk* chunk : addedChunk)
+	{
+		chunk->updateFace();
+		if (chunk->ChunkDoRender)
+		{
+			renderChunk.push_back(chunk);
+			//std::cout << chunk->ChunkCoor << " " << chunk->numVertex << "\n";
+		}
+	}
+	std::cout << renderChunk.size() << " " << Chunk::totalIndices;
 }
 
 void World::renderWorld()
@@ -42,14 +62,21 @@ void World::renderWorld()
 
 void World::addChunk(int x, int y, int z)
 {
-	worldMap[ChunkPos(Chunk::worldCoor(x, y, z))] = new Chunk(x, y, z);
+	worldMap[ChunkPos(worldCoor(x, y, z))] = new Chunk(x, y, z, this);
 }
 
 void World::loadChunk(int x, int y, int z)
 {
 }
 
-Chunk::worldCoor World::inWhatChunk(int x, int y, int z)
+
+Chunk* World::getChunk(worldCoor coor)
 {
-	return Chunk::worldCoor(x%CHUNK_WIDTH,y%CHUNK_HEIGHT,z%CHUNK_LENGTH);
+	if (worldMap[ChunkPos(coor)] == NULL) return nullptr;
+	return worldMap[ChunkPos(coor)];
+}
+
+worldCoor World::inWhatChunk(int x, int y, int z)
+{
+	return worldCoor(x/CHUNK_WIDTH,y/CHUNK_HEIGHT,z/CHUNK_LENGTH);
 }

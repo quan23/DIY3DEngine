@@ -12,7 +12,7 @@
 #include "VBO.h"
 #include "EBO.h"
 #include "Cube.h"
-#include "Chunk.h"
+#include "DataType.h"
 #include "World.h"
 
 int main()
@@ -69,22 +69,14 @@ int main()
 	cube Cube(vec3(1.5f),vec3(-5.0f),rota,plank,plankSpe);
 
 	World world(ShaderProgram.ID);
-	world.loadWorld(World::inWhatChunk(1,1,1), 5);
-
-	//Chunk chunk(0, 0, 0);
+	world.loadWorld(World::inWhatChunk(0,0,0), 5);
 
 	while (!glfwWindowShouldClose(window)&&!(glfwGetKey(window,GLFW_KEY_BACKSPACE)==GLFW_PRESS))
 	{
 		tEnd = glfwGetTime();
-		//std::cout << 1.0f / (tEnd - tStart) << "\n";
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//ShaderProgram.Activate();
-		Camera.cMatrix(45.0f, 0.1f, 100.0f, cameraID);
-		//Cube.rotate(rota);
-		//lPos=rotate(lPos, radians(1.0f), vec3(0.0f,1.0f,0.0f));
-		//glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lPos"), 1, &(lPos)[0]);
+		Camera.cMatrix(45.0f, 0.1f, 1000.0f, cameraID);
 		world.renderWorld();
-		//chunk.render(ShaderProgram.ID);
 		Camera.cInput(window,tEnd-tStart);
 		glUniform3fv(cPosID, 1, &Camera.cPosition[0]);
 		glfwSwapBuffers(window);

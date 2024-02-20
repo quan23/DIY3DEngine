@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "Texture.h"
+#include "DataType.h"
 
 class Block
 {
@@ -16,17 +17,12 @@ class Block
 		{
 			TOP = 0, NORTH = 1, WEST = 2, SOUTH = 3, EAST = 4, BOTTOM = 5
 		};
-		struct face
-		{
-			glm::vec3 vertex[4];
-			face operator+(const glm::vec3& coor);
-		};
 		static glm::vec3 vertex[];
 		static GLushort indices[];
 		char blockID;
 		Block(char blockID = 0);
 		static face getFace(faceID face);
-		
+		static glm::vec2 TextureCoor[4];
 	private:
 
 };

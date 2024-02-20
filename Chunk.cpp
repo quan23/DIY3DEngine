@@ -1,6 +1,9 @@
+#include "World.h"
+#include "Block.h"
 #include "Chunk.h";
 
-Chunk::Coor Chunk::nearBlock[] =
+
+Coor Chunk::nearBlock[] =
 {
 	Coor(0,1,0),
 	Coor(0,0,1),
@@ -10,9 +13,13 @@ Chunk::Coor Chunk::nearBlock[] =
 	Coor(0,-1,0),
 };
 
-Chunk::Chunk(int x, int y, int z)
+int Chunk::totalIndices = 0;
+
+Chunk::Chunk(int x, int y, int z, World* world)
 {
+	//std::cout << "-1\n";
 	ChunkCoor = worldCoor(x, y, z);
+	this->world = world;
 	for (char x = 0; x < CHUNK_WIDTH; x++)
 	{
 		int realX = x + CHUNK_WIDTH * ChunkCoor.x;
@@ -29,17 +36,15 @@ Chunk::Chunk(int x, int y, int z)
 					EmptyChunk = false;
 					getBlock(Coor(x, y, z))->blockID = 1;
 				}
-				else getBlock(Coor(x, y, z))->blockID = 0;
+				//else getBlock(Coor(x, y, z))->blockID = 0;
 			}
 		}
 	}
 	if (EmptyChunk)
 	{
 		ChunkDoRender = false;
-		delete[] indicesCheck;
-		delete[] blockList;
 	}
-	updateFace();
+	//updateFace();
 }
 
 unsigned int Chunk::Coor2Pos(Coor coor)
@@ -47,14 +52,15 @@ unsigned int Chunk::Coor2Pos(Coor coor)
 	return (coor.x + (coor.y * CHUNK_WIDTH + coor.z) * CHUNK_LENGTH);
 }
 
-Chunk::Coor Chunk::Pos2Coor(unsigned int pos)
+Coor Chunk::Pos2Coor(unsigned int pos)
 {
 	return Coor(char((pos % (CHUNK_WIDTH * CHUNK_LENGTH)) % CHUNK_WIDTH), char(pos / (CHUNK_WIDTH * CHUNK_LENGTH)), char((pos % (CHUNK_WIDTH * CHUNK_LENGTH)) / CHUNK_LENGTH));
 }
 
 void Chunk::updateFace()
 {
-	Block::face thisFace;
+	
+	face thisFace;
 	GLushort thisIndice[4];
 	GLushort (*indicesID)(glm::vec3&) = [](glm::vec3& coor)
 	{
@@ -82,6 +88,7 @@ void Chunk::updateFace()
 									chunkVertex.push_back(thisFace.vertex[Vertex]);
 									indicesCheck[indicesID(thisFace.vertex[Vertex])] = numVertex;
 									numVertex++;
+									totalIndices++;
 								}
 								thisIndice[Vertex] = indicesCheck[indicesID(thisFace.vertex[Vertex])];
 							}
@@ -100,7 +107,7 @@ void Chunk::updateFace()
 	}
 	//std::cout << numFace << " " << chunkIndices.size();
 	//std::cout << chunkIndices.size() << "\n";
-	if (!chunkVertex.size())
+	if (chunkVertex.size()==0)
 	{
 		ChunkDoRender = false;
 		return;
@@ -111,8 +118,8 @@ void Chunk::updateFace()
 	_EBO = new EBO(&chunkIndices[0], chunkIndices.size() * sizeof(GLushort));
 	_VAO->LinkVBO(*_VBO, 0, 3, 3, 0);
 	_VAO->Unbind();
-	_VBO->Unbind();
-	_EBO->Unbind();
+	_VBO->Delete();
+	_EBO->Delete();
 }
 
 void Chunk::render(GLuint ShaderProgram)
@@ -120,67 +127,45 @@ void Chunk::render(GLuint ShaderProgram)
 	if (ChunkDoRender)
 	{
 		_VAO->Bind();
-		glUniform1ui(glGetUniformLocation(ShaderProgram, "CHUNK_WIDTH"), CHUNK_WIDTH);
-		glUniform1ui(glGetUniformLocation(ShaderProgram, "CHUNK_LENGTH"), CHUNK_LENGTH);
-		glUniform1ui(glGetUniformLocation(ShaderProgram, "CHUNK_HEIGHT"), CHUNK_HEIGHT);
-		glUniform3i(glGetUniformLocation(ShaderProgram, "chunkPos"), ChunkCoor.x, ChunkCoor.y, ChunkCoor.z);
+		glUniform1i(glGetUniformLocation(ShaderProgram, "CHUNK_WIDTH"), CHUNK_WIDTH);
+		glUniform1i(glGetUniformLocation(ShaderProgram, "CHUNK_LENGTH"), CHUNK_LENGTH);
+		glUniform1i(glGetUniformLocation(ShaderProgram, "CHUNK_HEIGHT"), CHUNK_HEIGHT);
+		glUniform1i(glGetUniformLocation(ShaderProgram, "chunkX"), ChunkCoor.x);
+		glUniform1i(glGetUniformLocation(ShaderProgram, "chunkY"), ChunkCoor.y);
+		glUniform1i(glGetUniformLocation(ShaderProgram, "chunkZ"), ChunkCoor.z);
 		glDrawElements(GL_TRIANGLES, chunkIndices.size(), GL_UNSIGNED_SHORT, 0);
-		//_VAO->Unbind();
+		_VAO->Unbind();
 	}
 }
 
-Block* Chunk::getBlock(Coor Coor)
+Block* Chunk::getBlock(Coor coor)
 {
-	if ((Coor.x < 0) || (Coor.x >= CHUNK_WIDTH) || (Coor.y < 0) || (Coor.y >= CHUNK_HEIGHT) || (Coor.z < 0) || (Coor.z >= CHUNK_LENGTH)) return nullptr;
-	int BlockPos = Chunk::Coor2Pos(Coor);
-	return getBlock(BlockPos);
+	if (EmptyChunk) return nullptr;
+	if ((coor.x < 0) || (coor.x >= CHUNK_WIDTH) || (coor.y < 0) || (coor.y >= CHUNK_HEIGHT) || (coor.z < 0) || (coor.z >= CHUNK_LENGTH))
+	{
+		worldCoor wCoor = ChunkCoor;
+		wCoor.x += (coor.x / CHUNK_WIDTH + ((coor.x < 0) ? -1 : 0));
+		wCoor.y += (coor.y / CHUNK_HEIGHT + ((coor.y < 0) ? -1 : 0));
+		wCoor.z += (coor.z / CHUNK_LENGTH + ((coor.z < 0) ? -1 : 0));
+		coor.x = (coor.x + CHUNK_WIDTH) % CHUNK_WIDTH;
+		coor.y = (coor.y + CHUNK_HEIGHT) % CHUNK_HEIGHT;
+		coor.z = (coor.z + CHUNK_LENGTH) % CHUNK_LENGTH;
+		if (world->worldMap[World::ChunkPos(wCoor)] == NULL)
+		{
+			return nullptr;
+			std::cout << "-1\n";
+		}
+		return (world->worldMap[World::ChunkPos(wCoor)]->getBlock(coor));
+		return nullptr;
+	}
+	return getBlock(Coor2Pos(coor));
 	return nullptr;
 }
 
 Block* Chunk::getBlock(GLushort Pos)
 {
+	if (EmptyChunk) return nullptr;
 	if ((Pos >= 0) && (Pos < CHUNK_SIZE)) return &(blockList[Pos]);
 	return nullptr;
 }
 
-Chunk::Coor::Coor(char x, char y, char z) : x(x), y(y), z(z)
-{
-
-}
-
-Chunk::Coor Chunk::Coor::operator+(const Coor& coor)
-{
-	this->x += coor.x;
-	this->y += coor.y;
-	this->z += coor.z;
-	return *this;
-}
-
-bool Chunk::Coor::operator==(const Coor& Coor)
-{
-	return (this->x == Coor.x) && (this->y == Coor.y) && (this->z == Coor.z);
-}
-
-bool Chunk::Coor::operator!=(const Coor& Coor)
-{
-	return !(*this == Coor);
-}
-
-Chunk::worldCoor::worldCoor(int x, int y, int z) : x(x), y(y), z(z)
-{
-
-}
-
-Chunk::worldCoor Chunk::worldCoor::operator+(const worldCoor& coor)
-{
-	this->x += coor.x;
-	this->y += coor.y;
-	this->z += coor.z;
-	return *this;
-}
-
-std::ostream& Chunk::worldCoor::operator<<(std::ostream& stream)
-{
-	stream << this->x << " " << this->y << " " << this->z;
-	return stream;
-}

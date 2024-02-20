@@ -23,18 +23,21 @@ GLushort Block::indices[] =
 	1,6,5/*,1,5*/,0,
 };
 
+glm::vec2 TextureCoor[4] =
+{
+	glm::vec2(0.0f,0.0f),
+	glm::vec2(0.0f,1.0f),
+	glm::vec2(1.0f,1.0f),
+	glm::vec2(1.0f,0.0f),
+};
+
 Block::Block(char blockID) : blockID(blockID)
 {
 
 }
 
-Block::face Block::getFace(Block::faceID face)
+face Block::getFace(Block::faceID Face)
 {
-	return Block::face({ vertex[indices[face * 4]], vertex[indices[face * 4 + 1]] ,vertex[indices[face * 4 + 2]] ,vertex[indices[face * 4 + 3]] });
+	return face(vertex[indices[Face * 4]], vertex[indices[Face * 4 + 1]], vertex[indices[Face * 4 + 2]], vertex[indices[Face * 4 + 3]]);
 }
 
-Block::face Block::face::operator+(const glm::vec3& coor)
-{
-	for (glm::vec3& vertex : this->vertex) vertex = vertex + coor;
-	return *this;
-}
