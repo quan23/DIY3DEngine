@@ -85,10 +85,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.frag">
+    <None Include="default_frag.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="default.vert">
+    <None Include="default_vert.glsl">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

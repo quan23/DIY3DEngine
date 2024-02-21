@@ -38,7 +38,7 @@ int main()
 	
 	double tStart, tEnd;
 
-	Shader ShaderProgram("default.vert", "default.frag");
+	Shader ShaderProgram("default_vert.glsl", "default_frag.glsl");
 	stbi_set_flip_vertically_on_load(true);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);

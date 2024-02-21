@@ -13,6 +13,14 @@ Coor Chunk::nearBlock[] =
 	Coor(0,-1,0),
 };
 
+glm::vec2 text[] =
+{
+	glm::vec2(0.0f,0.0f),
+	glm::vec2(0.0f,1.0f),
+	glm::vec2(1.0f,1.0f),
+	glm::vec2(1.0f,0.0f),
+};
+
 int Chunk::totalIndices = 0;
 
 Chunk::Chunk(int x, int y, int z, World* world)

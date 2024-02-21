@@ -172,8 +172,8 @@
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.frag" />
-    <None Include="default.vert" />
+    <None Include="default_frag.glsl" />
+    <None Include="default_vert.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />

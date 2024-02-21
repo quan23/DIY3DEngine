@@ -15,6 +15,7 @@ class camera
 		glm::vec3 cPosition;
 		glm::vec3 cOrientation = glm::vec3(0.0f, 0.0f, -1.0f);
 		glm::vec3 cUp = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 cMove = glm::vec3(0.0f);
 		int cWidth, cHeight;
 		worldCoor WorldCoor;
 

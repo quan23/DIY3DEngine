@@ -15,31 +15,33 @@ void camera::cMatrix(float Fov, float fNear, float fFar, GLuint uniformID)
 
 void camera::cInput(GLFWwindow* window, double fram)
 {
+	cMove = glm::vec3(0.0f);
 	float step = speed * fram;
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		cPosition += glm::normalize(glm::vec3(cOrientation.x,0.0f, cOrientation.z))*step;
+		cMove += glm::normalize(glm::vec3(cOrientation.x,0.0f, cOrientation.z));
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		cPosition -= glm::normalize(glm::vec3(cOrientation.x, 0.0f, cOrientation.z)) *step;
+		cMove -= glm::normalize(glm::vec3(cOrientation.x, 0.0f, cOrientation.z)) ;
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		cPosition -= glm::normalize(glm::cross(cOrientation, cUp))*step;
+		cMove -= glm::normalize(glm::cross(cOrientation, cUp));
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 	{
-		cPosition += glm::normalize(glm::cross(cOrientation, cUp))*step;
+		cMove += glm::normalize(glm::cross(cOrientation, cUp));
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 	{
-		cPosition -= cUp*step;
+		cMove -= cUp;
 	}
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		cPosition += cUp*step;
+		cMove += cUp;
 	}
+	if (glm::length(cMove)!=0) cPosition += glm::normalize(cMove)*step;
 	WorldCoor = World::inWhatChunk(int(cPosition.x), int(cPosition.y), int(cPosition.z));
 	glfwSetInputMode(window, GLFW_CURSOR,GLFW_CURSOR_HIDDEN);
 	double mouseX, mouseY;

@@ -28,7 +28,7 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 				if (worldMap[ChunkPos(worldCoor(x, y, z))] == NULL)
 				{
 					addChunk(x, y, z);
-					std::cout << "-1\n";
+					//std::cout << "-1\n";
 					if (!worldMap[ChunkPos(worldCoor(x, y, z))]->EmptyChunk)
 					{
 						addedChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z))]);
@@ -47,6 +47,7 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 		{
 			renderChunk.push_back(chunk);
 			//std::cout << chunk->ChunkCoor << " " << chunk->numVertex << "\n";
+			std::cout << Chunk::totalIndices << "\n";
 		}
 	}
 	addedChunk.clear();
