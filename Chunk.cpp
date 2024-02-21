@@ -59,7 +59,10 @@ Coor Chunk::Pos2Coor(unsigned int pos)
 
 void Chunk::updateFace()
 {
-	
+	GLushort indicesCheck[(CHUNK_WIDTH + 1) * (CHUNK_LENGTH + 1) * (CHUNK_HEIGHT + 1) + 1];
+	std::vector <face> chunkFace;
+	std::vector <glm::vec3> chunkVertex;
+	std::vector <GLushort> chunkIndices;
 	face thisFace;
 	GLushort thisIndice[4];
 	GLushort (*indicesID)(glm::vec3&) = [](glm::vec3& coor)
@@ -133,7 +136,7 @@ void Chunk::render(GLuint ShaderProgram)
 		glUniform1i(glGetUniformLocation(ShaderProgram, "chunkX"), ChunkCoor.x);
 		glUniform1i(glGetUniformLocation(ShaderProgram, "chunkY"), ChunkCoor.y);
 		glUniform1i(glGetUniformLocation(ShaderProgram, "chunkZ"), ChunkCoor.z);
-		glDrawElements(GL_TRIANGLES, chunkIndices.size(), GL_UNSIGNED_SHORT, 0);
+		glDrawElements(GL_TRIANGLES, numFace*6, GL_UNSIGNED_SHORT, 0);
 		_VAO->Unbind();
 	}
 }

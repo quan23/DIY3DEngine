@@ -41,10 +41,6 @@ class Chunk
 		Block* getBlock(GLushort Pos);
 		GLushort numVertex = 0;
 	private:
-		std::vector <face> chunkFace;
-		std::vector <glm::vec3> chunkVertex;
-		std::vector <GLushort> chunkIndices;
-		GLushort* indicesCheck = new GLushort[(CHUNK_WIDTH + 1) * (CHUNK_LENGTH + 1) * (CHUNK_HEIGHT + 1) + 1];
 		GLushort numFace = 0;
 		World* world;
 		VAO* _VAO;

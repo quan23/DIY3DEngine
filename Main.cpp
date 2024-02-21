@@ -69,13 +69,14 @@ int main()
 	cube Cube(vec3(1.5f),vec3(-5.0f),rota,plank,plankSpe);
 
 	World world(ShaderProgram.ID);
-	world.loadWorld(World::inWhatChunk(0,0,0), 5);
+	
 
 	while (!glfwWindowShouldClose(window)&&!(glfwGetKey(window,GLFW_KEY_BACKSPACE)==GLFW_PRESS))
 	{
 		tEnd = glfwGetTime();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Camera.cMatrix(45.0f, 0.1f, 1000.0f, cameraID);
+		world.loadWorld(Camera.WorldCoor, 1);
 		world.renderWorld();
 		Camera.cInput(window,tEnd-tStart);
 		glUniform3fv(cPosID, 1, &Camera.cPosition[0]);

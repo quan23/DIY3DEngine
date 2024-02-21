@@ -28,11 +28,11 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 				if (worldMap[ChunkPos(worldCoor(x, y, z))] == NULL)
 				{
 					addChunk(x, y, z);
-					//std::cout << "-1\n";
-				}
-				if (!worldMap[ChunkPos(worldCoor(x, y, z))]->EmptyChunk)
-				{
-					addedChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z))]);
+					std::cout << "-1\n";
+					if (!worldMap[ChunkPos(worldCoor(x, y, z))]->EmptyChunk)
+					{
+						addedChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z))]);
+					}
 				}
 				//std::cout << worldMap[ChunkPos(worldCoor(x, y, z))]->ChunkCoor << "\n";
 			}
@@ -49,7 +49,9 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 			//std::cout << chunk->ChunkCoor << " " << chunk->numVertex << "\n";
 		}
 	}
-	std::cout << renderChunk.size() << " " << Chunk::totalIndices;
+	addedChunk.clear();
+	//std::cout << renderChunk.size() << " " << Chunk::totalIndices << "\n";
+	
 }
 
 void World::renderWorld()
@@ -78,5 +80,10 @@ Chunk* World::getChunk(worldCoor coor)
 
 worldCoor World::inWhatChunk(int x, int y, int z)
 {
-	return worldCoor(x/CHUNK_WIDTH,y/CHUNK_HEIGHT,z/CHUNK_LENGTH);
+	return worldCoor(x / CHUNK_WIDTH + ((x < 0) ? -1 : 0), y / CHUNK_HEIGHT + ((y < 0) ? -1 : 0), z / CHUNK_LENGTH + ((z < 0) ? -1 : 0));
+}
+
+worldCoor World::inWhatChunk(Coor coor)
+{
+	return inWhatChunk(coor.x, coor.y, coor.z);
 }

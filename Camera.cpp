@@ -1,3 +1,4 @@
+#include "World.h"
 #include "Camera.h"
 
 camera::camera(int Width, int Height, glm::vec3 position) : cWidth(Width), cHeight(Height), cPosition(position)
@@ -39,6 +40,7 @@ void camera::cInput(GLFWwindow* window, double fram)
 	{
 		cPosition += cUp*step;
 	}
+	WorldCoor = World::inWhatChunk(int(cPosition.x), int(cPosition.y), int(cPosition.z));
 	glfwSetInputMode(window, GLFW_CURSOR,GLFW_CURSOR_HIDDEN);
 	double mouseX, mouseY;
 	glfwGetCursorPos(window, &mouseX, &mouseY);

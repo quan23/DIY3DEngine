@@ -20,6 +20,7 @@ class World
 		void loadChunk(int x, int y, int z);
 		Chunk* getChunk(worldCoor coor);
 		static worldCoor inWhatChunk(int x, int y, int z);
+		static worldCoor inWhatChunk(Coor coor);
 		GLuint ShaderProgram;
 	private:
 };

@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>
+#include "DataType.h"
 
 class camera
 {
@@ -15,8 +16,9 @@ class camera
 		glm::vec3 cOrientation = glm::vec3(0.0f, 0.0f, -1.0f);
 		glm::vec3 cUp = glm::vec3(0.0f, 1.0f, 0.0f);
 		int cWidth, cHeight;
+		worldCoor WorldCoor;
 
-		float speed = 5.0f, Xsensitivity = 0.5f, Ysensitivity = 0.5f;
+		float speed = 10.0f, Xsensitivity = 0.5f, Ysensitivity = 0.5f;
 		float yaw = 0.0f, pitch = 0.0f;
 	
 		camera(int Width, int Height, glm::vec3 position = glm::vec3(0.0f));
