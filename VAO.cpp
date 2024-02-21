@@ -10,7 +10,7 @@ void VAO::LinkVBO(VBO& VBO, GLuint Layout, GLuint size, GLuint stride, GLuint st
 {
 	VBO.Bind();
 	glEnableVertexAttribArray(Layout);
-	glVertexAttribPointer(Layout, size, GL_FLOAT, GL_FALSE, sizeof(float) * stride, (char*)(sizeof(float)*start));
+	glVertexAttribPointer(Layout, size, GL_FLOAT, GL_FALSE, stride, (char*)start);
 	VBO.Unbind();
 }
 

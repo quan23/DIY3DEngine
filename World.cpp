@@ -1,6 +1,15 @@
 #include "Chunk.h"
 #include "World.h"
 
+worldCoor nextChunk[] =
+{
+	worldCoor(0,1,0),
+	worldCoor(0,0,1),
+	worldCoor(-1,0,0),
+	worldCoor(0,0,-1),
+	worldCoor(1,0,0),
+	worldCoor(0,-1,0),
+};
 
 World::World(GLuint ShaderProgram) : ShaderProgram(ShaderProgram)
 {
@@ -32,6 +41,17 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 					if (!worldMap[ChunkPos(worldCoor(x, y, z))]->EmptyChunk)
 					{
 						addedChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z))]);
+						//for (char i = 0; i < 6; i++)
+						//{
+						//	if (worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])] != NULL)
+						//	{
+						//		if (!worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]->EmptyChunk)
+						//		{
+						//			addedChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]);
+						//			//std::cout << -1;
+						//		}
+						//	}
+						//}
 					}
 				}
 				//std::cout << worldMap[ChunkPos(worldCoor(x, y, z))]->ChunkCoor << "\n";

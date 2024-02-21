@@ -67,9 +67,8 @@ Coor Chunk::Pos2Coor(unsigned int pos)
 
 void Chunk::updateFace()
 {
-	GLushort indicesCheck[(CHUNK_WIDTH + 1) * (CHUNK_LENGTH + 1) * (CHUNK_HEIGHT + 1) + 1];
 	std::vector <face> chunkFace;
-	std::vector <glm::vec3> chunkVertex;
+	std::vector <vertex> chunkVertex;
 	std::vector <GLushort> chunkIndices;
 	face thisFace;
 	GLushort thisIndice[4];
@@ -77,8 +76,6 @@ void Chunk::updateFace()
 	{
 		return GLushort(GLushort(coor.x) + (GLushort(coor.y) * (CHUNK_LENGTH+1) + GLushort(coor.z)) * (CHUNK_WIDTH+1));
 	};
-	for (GLushort indices = 0; indices < (CHUNK_WIDTH + 1) * (CHUNK_LENGTH + 1) * (CHUNK_HEIGHT + 1) + 1; indices++) indicesCheck[indices] = GLushort(-1);
-	
 	for (char x = 0; x < CHUNK_WIDTH; x++)
 	{
 		for (char z = 0; z < CHUNK_LENGTH; z++)
@@ -92,23 +89,18 @@ void Chunk::updateFace()
 						if (getBlock(Coor(x, y, z) + nearBlock[face]) == nullptr || getBlock(Coor(x, y, z) + nearBlock[face])->blockID == 0)
 						{
 							thisFace = Block::getFace(Block::faceID(face)) + glm::vec3(x, y, z);
-							for (char Vertex = 0; Vertex < 4; Vertex++)
+							for (char i = 0; i < 4; i++)
 							{
-								if (indicesCheck[indicesID(thisFace.vertex[Vertex])] == GLushort(-1))
-								{
-									chunkVertex.push_back(thisFace.vertex[Vertex]);
-									indicesCheck[indicesID(thisFace.vertex[Vertex])] = numVertex;
-									numVertex++;
-									totalIndices++;
-								}
-								thisIndice[Vertex] = indicesCheck[indicesID(thisFace.vertex[Vertex])];
+								chunkVertex.push_back(vertex(thisFace.vertex[i],i));
+								numVertex++;
+								totalIndices++;
 							}
-							chunkIndices.push_back(thisIndice[0]);
-							chunkIndices.push_back(thisIndice[1]);
-							chunkIndices.push_back(thisIndice[2]);
-							chunkIndices.push_back(thisIndice[0]);
-							chunkIndices.push_back(thisIndice[2]);
-							chunkIndices.push_back(thisIndice[3]);
+							chunkIndices.push_back(numFace*4+0);
+							chunkIndices.push_back(numFace*4+1);
+							chunkIndices.push_back(numFace*4+2);
+							chunkIndices.push_back(numFace*4+0);
+							chunkIndices.push_back(numFace*4+2);
+							chunkIndices.push_back(numFace*4+3);
 							numFace++;
 						}
 					}
@@ -125,9 +117,10 @@ void Chunk::updateFace()
 	}
 	else ChunkDoRender = true;
 	_VAO = new VAO;
-	_VBO = new VBO(&chunkVertex[0][0], chunkVertex.size() * sizeof(glm::vec3));
+	_VBO = new VBO(&chunkVertex[0].Position[0], chunkVertex.size() * sizeof(vertex));
 	_EBO = new EBO(&chunkIndices[0], chunkIndices.size() * sizeof(GLushort));
-	_VAO->LinkVBO(*_VBO, 0, 3, 3, 0);
+	_VAO->LinkVBO(*_VBO, 0, 3, 3*sizeof(float) + sizeof(int), 0);
+	_VAO->LinkVBO(*_VBO, 1, 1, 3*sizeof(float) + sizeof(int), 3*sizeof(float));
 	_VAO->Unbind();
 	_VBO->Delete();
 	_EBO->Delete();

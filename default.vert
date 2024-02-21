@@ -1,6 +1,6 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
-//layout (location = 1) in vec2 tCor;
+layout (location = 1) in int tCor;
 //layout (location = 2) in vec3 aNor;
 
 
@@ -28,5 +28,20 @@ void main()
 	//fNor = aNor;
 	//tPos = tCor;
 	//fCol = (aNor + vec3(1.0f))/2.0f;
+	switch(tCor)
+	{
+		case 0:
+			tPos = vec2(0.0f,0.0f);
+			break;
+		case 1:
+			tPos = vec2(0.0f,1.0f);
+			break;
+		case 2:
+			tPos = vec2(1.0f,1.0f);
+			break;
+		case 3:
+			tPos = vec2(1.0f,0.0f);
+			break;
+	}
 	fCol = aPos/16.0f;
 }

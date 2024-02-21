@@ -25,6 +25,13 @@ struct face
 	face() = default;
 	face(glm::vec3 v0, glm::vec3 v1, glm::vec3 v2, glm::vec3 v3);
 };
+struct vertex
+{
+	glm::vec3 Position;
+	int data;
+	vertex() = default;
+	vertex(glm::vec3 Position, int data);
+};
 
 std::ostream& operator<<(std::ostream& stream, const worldCoor& coor);
 

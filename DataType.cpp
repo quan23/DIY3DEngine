@@ -56,3 +56,7 @@ face::face(glm::vec3 v0, glm::vec3 v1, glm::vec3 v2, glm::vec3 v3)
 	vertex[2] = v2;
 	vertex[3] = v3;
 }
+
+vertex::vertex(glm::vec3 Position, int data) : Position(Position), data(data)
+{
+}

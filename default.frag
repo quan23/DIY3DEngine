@@ -48,8 +48,8 @@ void main()
 {
     Nor = normalize(fNor);
     cDir = normalize(cPos-fPos);
-    //tCol = texture(tex0, tPos);
+    tCol = texture(tex0, tPos);
     //fSpe = texture(tex1, tPos);
-    vec3 tCol = fCol;
-    FragColor = vec4(tCol,1.0f);
+    //vec3 tCol = fCol;
+    FragColor = tCol;
 }
