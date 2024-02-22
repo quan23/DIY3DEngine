@@ -2,7 +2,6 @@
 #include "Block.h"
 #include "Chunk.h";
 
-
 Coor Chunk::nearBlock[] =
 {
 	Coor(0,1,0),
@@ -11,14 +10,6 @@ Coor Chunk::nearBlock[] =
 	Coor(0,0,-1),
 	Coor(1,0,0),
 	Coor(0,-1,0),
-};
-
-glm::vec2 text[] =
-{
-	glm::vec2(0.0f,0.0f),
-	glm::vec2(0.0f,1.0f),
-	glm::vec2(1.0f,1.0f),
-	glm::vec2(1.0f,0.0f),
 };
 
 int Chunk::totalIndices = 0;
@@ -91,7 +82,7 @@ void Chunk::updateFace()
 							thisFace = Block::getFace(Block::faceID(face)) + glm::vec3(x, y, z);
 							for (char i = 0; i < 4; i++)
 							{
-								chunkVertex.push_back(vertex(thisFace.vertex[i],i));
+								chunkVertex.push_back(vertex(thisFace.vertex[i],(face<<2)+i));
 								numVertex++;
 								totalIndices++;
 							}

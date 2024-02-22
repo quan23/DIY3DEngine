@@ -1,6 +1,7 @@
 #version 330 core
 out vec4 FragColor;
 
+in float lVal;
 in vec3 fPos;
 in vec2 tPos;
 in vec3 fNor;
@@ -51,5 +52,5 @@ void main()
     tCol = texture(tex0, tPos);
     //fSpe = texture(tex1, tPos);
     //vec3 tCol = fCol;
-    FragColor = tCol;
+    FragColor = vec4(tCol.xyz*lVal,1.0f);
 }

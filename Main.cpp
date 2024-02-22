@@ -66,10 +66,8 @@ int main()
 	plankSpe.Bind();
 	mat4 rota = mat4(1.0f);
 	rota = rotate(rota, radians(0.1f), vec3(0.0f, 1.0f, 0.0f));
-	cube Cube(vec3(1.5f),vec3(-5.0f),rota,plank,plankSpe);
 
 	World world(ShaderProgram.ID);
-	
 
 	while (!glfwWindowShouldClose(window)&&!(glfwGetKey(window,GLFW_KEY_BACKSPACE)==GLFW_PRESS))
 	{

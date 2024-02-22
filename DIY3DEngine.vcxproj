@@ -80,12 +80,12 @@
     <LibraryPath>C:\Users\COFFEE LATE\source\repos\DIY3DEngine\Libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\COFFEE LATE\source\repos\DIY3DEngine\Libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\COFFEE LATE\source\repos\DIY3DEngine\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\Libraries\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\COFFEE LATE\source\repos\DIY3DEngine\Libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\COFFEE LATE\source\repos\DIY3DEngine\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\Libraries\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
