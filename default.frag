@@ -5,7 +5,6 @@ in float lVal;
 in vec3 fPos;
 in vec2 tPos;
 in vec3 fNor;
-in vec3 fCol;
 
 uniform sampler2D tex0;
 uniform sampler2D tex1;

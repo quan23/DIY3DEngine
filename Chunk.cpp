@@ -42,6 +42,7 @@ Chunk::Chunk(int x, int y, int z, World* world)
 	if (EmptyChunk)
 	{
 		ChunkDoRender = false;
+		delete[] blockList;
 	}
 	//updateFace();
 }
@@ -79,10 +80,9 @@ void Chunk::updateFace()
 					{
 						if (getBlock(Coor(x, y, z) + nearBlock[face]) == nullptr || getBlock(Coor(x, y, z) + nearBlock[face])->blockID == 0)
 						{
-							thisFace = Block::getFace(Block::faceID(face)) + glm::vec3(x, y, z);
 							for (char i = 0; i < 4; i++)
 							{
-								chunkVertex.push_back(vertex(thisFace.vertex[i],(face<<2)+i));
+								chunkVertex.push_back(vertex(Coor2Pos(Coor(x, y, z)), (face << 2) + i));
 								numVertex++;
 								totalIndices++;
 							}
@@ -108,10 +108,10 @@ void Chunk::updateFace()
 	}
 	else ChunkDoRender = true;
 	_VAO = new VAO;
-	_VBO = new VBO(&chunkVertex[0].Position[0], chunkVertex.size() * sizeof(vertex));
+	_VBO = new VBO(&chunkVertex[0].Position, chunkVertex.size() * sizeof(vertex));
 	_EBO = new EBO(&chunkIndices[0], chunkIndices.size() * sizeof(GLushort));
-	_VAO->LinkVBO(*_VBO, 0, 3, 3*sizeof(float) + sizeof(int), 0);
-	_VAO->LinkVBO(*_VBO, 1, 1, 3*sizeof(float) + sizeof(int), 3*sizeof(float));
+	_VAO->LinkVBO(*_VBO, 0, 1, 2*sizeof(int), 0);
+	_VAO->LinkVBO(*_VBO, 1, 1, 2*sizeof(int), sizeof(int));
 	_VAO->Unbind();
 	_VBO->Delete();
 	_EBO->Delete();

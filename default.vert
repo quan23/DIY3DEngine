@@ -1,14 +1,41 @@
 #version 330 core
-layout (location = 0) in vec3 aPos;
+layout (location = 0) in int aPos;
 layout (location = 1) in int data;
 //layout (location = 2) in vec3 aNor;
 
+const vec3 vertex[] = vec3[]
+(
+	vec3(0.0f,0.0f,0.0f),
+	vec3(1.0f,0.0f,0.0f),
+	vec3(1.0f,1.0f,0.0f),
+	vec3(0.0f,1.0f,0.0f),
+	vec3(0.0f,1.0f,1.0f),
+	vec3(0.0f,0.0f,1.0f),
+	vec3(1.0f,0.0f,1.0f),
+	vec3(1.0f,1.0f,1.0f)
+);
+
+const unsigned short indices[] = unsigned short[]
+(
+	3,4,7,2,
+	6,7,4,5,
+	5,4,3,0,
+	0,3,2,1,
+	1,2,7,6,
+	1,6,5,0
+);
+const vec2 texCoor[] = vec2[]
+(
+	vec2(0.0f,0.0f),
+	vec2(0.0f,1.0f),
+	vec2(1.0f,1.0f),
+	vec2(1.0f,0.0f)
+);
 
 out float lVal;
 out vec3 fPos;
 out vec2 tPos;
 out vec3 fNor;
-out vec3 fCol;
 
 uniform mat4 camera;
 uniform mat4 model;
@@ -23,29 +50,27 @@ uniform int chunkZ;
 
 void main()
 {
-	fPos = aPos + vec3(chunkX*CHUNK_WIDTH,chunkY*CHUNK_HEIGHT,chunkZ*CHUNK_LENGTH);
-	gl_Position = camera * vec4(fPos, 1.0f);
+
 	//fNor = aNor;
 	//tPos = tCor;
 	//fCol = (aNor + vec3(1.0f))/2.0f;
-	int tCor = data%4;
-	int data = data/4;
-	switch(tCor)
-	{
-		case 0:
-			tPos = vec2(0.0f,0.0f);
-			break;
-		case 1:
-			tPos = vec2(0.0f,1.0f);
-			break;
-		case 2:
-			tPos = vec2(1.0f,1.0f);
-			break;
-		case 3:
-			tPos = vec2(1.0f,0.0f);
-			break;
-	}
-	switch(data)
+	tPos = texCoor[data%4];
+
+	ivec3 ver;
+	int Pos = aPos;
+	ver.x = Pos % CHUNK_WIDTH;
+	Pos = Pos / CHUNK_WIDTH;
+	ver.z = Pos % CHUNK_LENGTH;
+	Pos = Pos / CHUNK_LENGTH;
+	ver.y = Pos % CHUNK_HEIGHT;
+	Pos = Pos / CHUNK_HEIGHT;
+
+
+
+	fPos = ver + vertex[indices[data]] + vec3(chunkX*CHUNK_WIDTH,chunkY*CHUNK_HEIGHT,chunkZ*CHUNK_LENGTH);
+	gl_Position = camera * vec4(fPos, 1.0f);
+	
+	switch(data/4)
 	{
 		case 0:
 			lVal = 1.0f;
@@ -60,5 +85,4 @@ void main()
 			lVal = 0.0f;
 			break;
 	}
-	fCol = aPos/16.0f;
 }

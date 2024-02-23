@@ -27,10 +27,10 @@ struct face
 };
 struct vertex
 {
-	glm::vec3 Position;
+	int Position;
 	int data;
 	vertex() = default;
-	vertex(glm::vec3 Position, int data);
+	vertex(int Position, int data);
 };
 
 std::ostream& operator<<(std::ostream& stream, const worldCoor& coor);
