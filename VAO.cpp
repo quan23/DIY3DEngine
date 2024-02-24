@@ -28,4 +28,5 @@ void VAO::Delete()
 {
 	Unbind();
 	glDeleteVertexArrays(1, &ID);
+	delete this;
 }

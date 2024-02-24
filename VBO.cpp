@@ -29,4 +29,5 @@ void VBO::Delete()
 {
 	Unbind();
 	glDeleteBuffers(1, &ID);
+	delete this;
 }

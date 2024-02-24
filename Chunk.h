@@ -30,8 +30,10 @@ class Chunk
 		Block* blockList = new Block[CHUNK_SIZE];
 		worldCoor ChunkCoor;
 		bool ChunkDoRender = false, EmptyChunk = true;
+
 		static Coor nearBlock[];
 		static int totalIndices;
+
 		Chunk(int x, int y, int z, World* world);
 		unsigned int Coor2Pos(Coor coor);
 		Coor Pos2Coor(unsigned int pos);
@@ -44,9 +46,9 @@ class Chunk
 	private:
 		GLushort numFace = 0;
 		World* world;
-		VAO* _VAO;
-		VBO* _VBO;
-		EBO* _EBO;
+		VAO* _VAO = nullptr;
+		VBO* _VBO = nullptr;
+		EBO* _EBO = nullptr;
 };
 
 

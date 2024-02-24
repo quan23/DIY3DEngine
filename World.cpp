@@ -13,6 +13,7 @@ worldCoor nextChunk[] =
 
 World::World(GLuint ShaderProgram) : ShaderProgram(ShaderProgram)
 {
+
 }
 
 unsigned long long World::ChunkPos(worldCoor coor)
@@ -41,17 +42,18 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 					if (!worldMap[ChunkPos(worldCoor(x, y, z))]->EmptyChunk)
 					{
 						addedChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z))]);
-						//for (char i = 0; i < 6; i++)
-						//{
-						//	if (worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])] != NULL)
-						//	{
-						//		if (!worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]->EmptyChunk)
-						//		{
-						//			addedChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]);
-						//			//std::cout << -1;
-						//		}
-						//	}
-						//}
+						for (char i = 0; i < 6; i++)
+						{
+							if (worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])] != NULL)
+							{
+								if (!worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]->EmptyChunk && worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]->ChunkDoRender)
+								{
+									addedChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]);
+
+									//std::cout << -1;
+								}
+							}
+						}
 					}
 				}
 				//std::cout << worldMap[ChunkPos(worldCoor(x, y, z))]->ChunkCoor << "\n";
@@ -65,7 +67,7 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 		chunk->updateFace();
 		if (chunk->ChunkDoRender)
 		{
-			renderChunk.push_back(chunk);
+			//renderChunk.push_back(chunk);
 			//std::cout << chunk->ChunkCoor << " " << chunk->numVertex << "\n";
 			std::cout << Chunk::totalIndices << "\n";
 		}
@@ -77,9 +79,11 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 
 void World::renderWorld()
 {
-	for (Chunk*& chunk : renderChunk)
+	for (auto& chunk : worldMap)
 	{
-		chunk->render(ShaderProgram);
+		if (chunk.second != NULL)
+			if (chunk.second->ChunkDoRender)
+				chunk.second->render(ShaderProgram);
 	}
 }
 

@@ -82,7 +82,7 @@ void main()
 			lVal = 0.7f;
 			break;
 		case 5:
-			lVal = 0.0f;
+			lVal = 0.2f;
 			break;
 	}
 }

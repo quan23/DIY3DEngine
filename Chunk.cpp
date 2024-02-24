@@ -41,7 +41,7 @@ Chunk::Chunk(int x, int y, int z, World* world)
 	}
 	if (EmptyChunk)
 	{
-		ChunkDoRender = false;
+		//ChunkDoRender = false;
 		delete[] blockList;
 	}
 	//updateFace();
@@ -59,11 +59,20 @@ Coor Chunk::Pos2Coor(unsigned int pos)
 
 void Chunk::updateFace()
 {
+	if (EmptyChunk)
+	{
+		ChunkDoRender = false;
+		return;
+	}
+	else ChunkDoRender = true;
 	std::vector <face> chunkFace;
 	std::vector <vertex> chunkVertex;
 	std::vector <GLushort> chunkIndices;
 	face thisFace;
 	GLushort thisIndice[4];
+	totalIndices -= numVertex;
+	numVertex = 0;
+	numFace = 0;
 	GLushort (*indicesID)(glm::vec3&) = [](glm::vec3& coor)
 	{
 		return GLushort(GLushort(coor.x) + (GLushort(coor.y) * (CHUNK_LENGTH+1) + GLushort(coor.z)) * (CHUNK_WIDTH+1));
@@ -101,12 +110,13 @@ void Chunk::updateFace()
 	}
 	//std::cout << numFace << " " << chunkIndices.size();
 	//std::cout << chunkIndices.size() << "\n";
-	if (chunkVertex.size()==0)
+	if (chunkIndices.size()==0)
 	{
 		ChunkDoRender = false;
 		return;
 	}
 	else ChunkDoRender = true;
+	if (_VAO != nullptr) _VAO->Delete();
 	_VAO = new VAO;
 	_VBO = new VBO(&chunkVertex[0].Position, chunkVertex.size() * sizeof(vertex));
 	_EBO = new EBO(&chunkIndices[0], chunkIndices.size() * sizeof(GLushort));
