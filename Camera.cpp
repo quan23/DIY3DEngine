@@ -60,3 +60,8 @@ void camera::cInput(GLFWwindow* window, double fram)
 
 }
 
+void camera::setSpeed(float speed)
+{
+	this->speed = speed;
+}
+

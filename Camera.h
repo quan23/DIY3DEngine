@@ -25,6 +25,7 @@ class camera
 		camera(int Width, int Height, glm::vec3 position = glm::vec3(0.0f));
 		void cMatrix(float Fov, float fNear, float fFar, GLuint uniformID);
 		void cInput(GLFWwindow* window, double fram);
+		void setSpeed(float speed);
 };
 
 #endif

@@ -76,7 +76,7 @@ void main()
 			lVal = 1.0f;
 			break;
 		case 1: case 3:
-			lVal = 0.5f;
+			lVal = 0.4f;
 			break;
 		case 2: case 4:
 			lVal = 0.7f;

@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <vector>
+#include <queue>
 #include "DataType.h"
 #include "Chunk.h"
 
@@ -11,7 +12,7 @@ class World
 	public:
 		std::unordered_map <unsigned long long, Chunk*> worldMap;
 		std::vector <Chunk*> renderChunk;
-		std::vector <Chunk*> addedChunk;
+		std::queue <Chunk*> updatedChunk;
 		World(GLuint ShaderProgram);
 		static unsigned long long ChunkPos(worldCoor coor);
 		void loadWorld(worldCoor Center, GLushort radian);

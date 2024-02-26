@@ -41,14 +41,15 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 					//std::cout << "-1\n";
 					if (!worldMap[ChunkPos(worldCoor(x, y, z))]->EmptyChunk)
 					{
-						addedChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z))]);
+						updatedChunk.push(worldMap[ChunkPos(worldCoor(x, y, z))]);
+						renderChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z))]);
 						for (char i = 0; i < 6; i++)
 						{
 							if (worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])] != NULL)
 							{
 								if (!worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]->EmptyChunk && worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]->ChunkDoRender)
 								{
-									addedChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]);
+									updatedChunk.push(worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]);
 
 									//std::cout << -1;
 								}
@@ -61,29 +62,31 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 		}
 	}
 	//std::cout << renderChunk.size();
-	//std::cout << addedChunk.size();
-	for (Chunk* chunk : addedChunk)
+	//std::cout << updatedChunk.size();
+	if (!updatedChunk.empty())
 	{
-		chunk->updateFace();
-		if (chunk->ChunkDoRender)
+		updatedChunk.front()->updateFace();
+		updatedChunk.pop();
+		//if (chunk->ChunkDoRender)
 		{
 			//renderChunk.push_back(chunk);
 			//std::cout << chunk->ChunkCoor << " " << chunk->numVertex << "\n";
-			std::cout << Chunk::totalIndices << "\n";
+			//std::cout << Chunk::totalIndices << "\n";
 		}
 	}
-	addedChunk.clear();
+	//updatedChunk.clear();
 	//std::cout << renderChunk.size() << " " << Chunk::totalIndices << "\n";
 	
 }
 
 void World::renderWorld()
 {
-	for (auto& chunk : worldMap)
+	for (auto& chunk : renderChunk)
 	{
-		if (chunk.second != NULL)
+		/*if (chunk.second != NULL)
 			if (chunk.second->ChunkDoRender)
-				chunk.second->render(ShaderProgram);
+				chunk.second->render(ShaderProgram);*/
+		if (chunk->ChunkDoRender) chunk->render(ShaderProgram);
 	}
 }
 

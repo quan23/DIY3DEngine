@@ -4,6 +4,7 @@
 #include <stb/stb_image.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+#include <thread>
 
 #include "ShaderClass.h"
 #include "Texture.h"
@@ -68,13 +69,15 @@ int main()
 	rota = rotate(rota, radians(0.1f), vec3(0.0f, 1.0f, 0.0f));
 
 	World world(ShaderProgram.ID);
-
+	//thread load((&World::loadWorld), ref(world), Camera.WorldCoor, 3);
+	Camera.setSpeed(1000.0f);
 	while (!glfwWindowShouldClose(window)&&!(glfwGetKey(window,GLFW_KEY_BACKSPACE)==GLFW_PRESS))
 	{
 		tEnd = glfwGetTime();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Camera.cMatrix(45.0f, 0.1f, 1000.0f, cameraID);
-		world.loadWorld(Camera.WorldCoor, 1);
+		world.loadWorld(Camera.WorldCoor, 3);
+		//thread render(&World::renderWorld, ref(world));
 		world.renderWorld();
 		Camera.cInput(window,tEnd-tStart);
 		glUniform3fv(cPosID, 1, &Camera.cPosition[0]);
