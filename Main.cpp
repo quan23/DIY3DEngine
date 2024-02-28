@@ -44,6 +44,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_CULL_FACE);
 	//glClearColor(0.4f, 0.5f, 0.5f, 1.0f);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
@@ -70,12 +71,12 @@ int main()
 
 	World world(ShaderProgram.ID);
 	//thread load((&World::loadWorld), ref(world), Camera.WorldCoor, 3);
-	Camera.setSpeed(1000.0f);
+	Camera.setSpeed(50.0f);
 	while (!glfwWindowShouldClose(window)&&!(glfwGetKey(window,GLFW_KEY_BACKSPACE)==GLFW_PRESS))
 	{
 		tEnd = glfwGetTime();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		Camera.cMatrix(45.0f, 0.1f, 1000.0f, cameraID);
+		Camera.cMatrix(70.0f, 0.1f, 1000.0f, cameraID);
 		world.loadWorld(Camera.WorldCoor, 3);
 		//thread render(&World::renderWorld, ref(world));
 		world.renderWorld();

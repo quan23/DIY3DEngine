@@ -39,44 +39,13 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 				{
 					addChunk(x, y, z);
 					//std::cout << "-1\n";
-					if (!worldMap[ChunkPos(worldCoor(x, y, z))]->EmptyChunk)
-					{
-						updatedChunk.push(worldMap[ChunkPos(worldCoor(x, y, z))]);
-						renderChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z))]);
-						for (char i = 0; i < 6; i++)
-						{
-							if (worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])] != NULL)
-							{
-								if (!worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]->EmptyChunk && worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]->ChunkDoRender)
-								{
-									updatedChunk.push(worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]);
-
-									//std::cout << -1;
-								}
-							}
-						}
-					}
+					
 				}
 				//std::cout << worldMap[ChunkPos(worldCoor(x, y, z))]->ChunkCoor << "\n";
 			}
 		}
 	}
-	//std::cout << renderChunk.size();
-	//std::cout << updatedChunk.size();
-	if (!updatedChunk.empty())
-	{
-		updatedChunk.front()->updateFace();
-		updatedChunk.pop();
-		//if (chunk->ChunkDoRender)
-		{
-			//renderChunk.push_back(chunk);
-			//std::cout << chunk->ChunkCoor << " " << chunk->numVertex << "\n";
-			//std::cout << Chunk::totalIndices << "\n";
-		}
-	}
-	//updatedChunk.clear();
-	//std::cout << renderChunk.size() << " " << Chunk::totalIndices << "\n";
-	
+	reloadWorld();
 }
 
 void World::renderWorld()
@@ -93,10 +62,46 @@ void World::renderWorld()
 void World::addChunk(int x, int y, int z)
 {
 	worldMap[ChunkPos(worldCoor(x, y, z))] = new Chunk(x, y, z, this);
+	if (!worldMap[ChunkPos(worldCoor(x, y, z))]->EmptyChunk)
+	{
+		updatedChunk.push(worldMap[ChunkPos(worldCoor(x, y, z))]);
+		renderChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z))]);
+		for (char i = 0; i < 6; i++)
+		{
+			if (worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])] != NULL)
+			{
+				if (!worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]->EmptyChunk && worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]->ChunkDoRender)
+				{
+					updatedChunk.push(worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]);
+
+					//std::cout << -1;
+				}
+			}
+		}
+	}
 }
 
 void World::loadChunk(int x, int y, int z)
 {
+}
+
+void World::reloadWorld()
+{
+	//std::cout << renderChunk.size();
+	//std::cout << updatedChunk.size();
+	if (!updatedChunk.empty())
+	{
+		updatedChunk.front()->updateFace();
+		updatedChunk.pop();
+		//if (chunk->ChunkDoRender)
+		{
+			//renderChunk.push_back(chunk);
+			//std::cout << chunk->ChunkCoor << " " << chunk->numVertex << "\n";
+			//std::cout << Chunk::totalIndices << "\n";
+		}
+	}
+	//updatedChunk.clear();
+	//std::cout << renderChunk.size() << " " << Chunk::totalIndices << "\n";
 }
 
 

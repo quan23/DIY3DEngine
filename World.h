@@ -19,6 +19,7 @@ class World
 		void renderWorld();
 		void addChunk(int x, int y, int z);
 		void loadChunk(int x, int y, int z);
+		void reloadWorld();
 		Chunk* getChunk(worldCoor coor);
 		static worldCoor inWhatChunk(int x, int y, int z);
 		static worldCoor inWhatChunk(Coor coor);
