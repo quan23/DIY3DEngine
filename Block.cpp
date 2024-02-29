@@ -1,8 +1,10 @@
+#include "Chunk.h"
 #include "Block.h"
 
 
 using namespace glm;
-glm::vec3 Block::vertex[] =
+
+glm::vec3 Block::Vertex[] =
 {
 	vec3(0.0f,0.0f,0.0f),
 	vec3(1.0f,0.0f,0.0f),
@@ -13,14 +15,14 @@ glm::vec3 Block::vertex[] =
 	vec3(1.0f,0.0f,1.0f),
 	vec3(1.0f,1.0f,1.0f),
 };
-GLushort Block::indices[] =
+GLushort Block::Indices[] =
 {
-	3,4,7/*,3,7*/,2,
-	6,7,4/*,6,4*/,5,
-	5,4,3/*,5,3*/,0,
-	0,3,2/*,0,2*/,1,
-	1,2,7/*,1,7*/,6,
-	1,6,5/*,1,5*/,0,
+	3,4,7,2,
+	6,7,4,5,
+	5,4,3,0,
+	0,3,2,1,
+	1,2,7,6,
+	1,6,5,0,
 };
 
 glm::vec2 TextureCoor[4] =
@@ -35,9 +37,36 @@ Block::Block(char blockID) : blockID(blockID)
 {
 
 }
-
+/*
 face Block::getFace(Block::faceID Face)
 {
-	return face(vertex[indices[Face * 4]], vertex[indices[Face * 4 + 1]], vertex[indices[Face * 4 + 2]], vertex[indices[Face * 4 + 3]]);
+	return face(Vertex[Indices[Face * 4]], Vertex[Indices[Face * 4 + 1]], Vertex[Indices[Face * 4 + 2]], Vertex[Indices[Face * 4 + 3]]);
+}
+*/
+void Block::getFace(Chunk& chunk, Coor coor)
+{
+	if (blockID != 0)
+	{
+		for (char face = faceID::TOP; face <= faceID::BOTTOM; face++)
+		{
+			//std::cout << coor << " " << (int)face << "\n";
+			if (chunk.getBlock(coor + Chunk::nearBlock[face]) == nullptr || chunk.getBlock(coor + Chunk::nearBlock[face])->blockID == 0)
+			{
+				for (char i = 0; i < 4; i++)
+				{
+					chunk.chunkVertex.push_back(vertex(chunk.Coor2Pos(coor), int(face << 2) + i));
+					chunk.numVertex++;
+					Chunk::totalIndices++;
+				}
+				chunk.chunkIndices.push_back(chunk.numFace * 4 + 0);
+				chunk.chunkIndices.push_back(chunk.numFace * 4 + 1);
+				chunk.chunkIndices.push_back(chunk.numFace * 4 + 2);
+				chunk.chunkIndices.push_back(chunk.numFace * 4 + 0);
+				chunk.chunkIndices.push_back(chunk.numFace * 4 + 2);
+				chunk.chunkIndices.push_back(chunk.numFace * 4 + 3);
+				chunk.numFace++;
+			}
+		}
+	}
 }
 

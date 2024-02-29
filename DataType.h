@@ -33,6 +33,7 @@ struct vertex
 	vertex(int Position, int data);
 };
 
+std::ostream& operator<<(std::ostream& stream, const Coor& coor);
 std::ostream& operator<<(std::ostream& stream, const worldCoor& coor);
 
 #endif

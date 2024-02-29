@@ -30,9 +30,13 @@ class Chunk
 		Block* blockList = new Block[CHUNK_SIZE];
 		worldCoor ChunkCoor;
 		bool ChunkDoRender = false, EmptyChunk = true;
+		static int totalIndices;
+		GLushort numFace = 0;
 
 		static Coor nearBlock[];
-		static int totalIndices;
+
+		std::vector <vertex> chunkVertex;
+		std::vector <GLushort> chunkIndices;
 
 		Chunk(int x, int y, int z, World* world);
 		unsigned int Coor2Pos(Coor coor);
@@ -44,7 +48,7 @@ class Chunk
 		GLushort numVertex = 0;
 		Chunk* NeigborChunk[6];
 	private:
-		GLushort numFace = 0;
+		
 		World* world;
 		VAO* _VAO = nullptr;
 		VBO* _VBO = nullptr;

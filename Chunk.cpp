@@ -65,9 +65,8 @@ void Chunk::updateFace()
 		return;
 	}
 	else ChunkDoRender = true;
-	std::vector <face> chunkFace;
-	std::vector <vertex> chunkVertex;
-	std::vector <GLushort> chunkIndices;
+	chunkVertex.clear();
+	chunkIndices.clear();
 	face thisFace;
 	GLushort thisIndice[4];
 	totalIndices -= numVertex;
@@ -83,7 +82,7 @@ void Chunk::updateFace()
 		{
 			for (char y = 0; y < CHUNK_HEIGHT; y++)
 			{
-				if (getBlock(Coor(x, y, z))->blockID != 0)
+				/*if (getBlock(Coor(x, y, z))->blockID != 0)
 				{
 					for (char face = Block::faceID::TOP; face <= Block::faceID::BOTTOM; face++)
 					{
@@ -95,19 +94,23 @@ void Chunk::updateFace()
 								numVertex++;
 								totalIndices++;
 							}
-							chunkIndices.push_back(numFace*4+0);
-							chunkIndices.push_back(numFace*4+1);
-							chunkIndices.push_back(numFace*4+2);
-							chunkIndices.push_back(numFace*4+0);
-							chunkIndices.push_back(numFace*4+2);
-							chunkIndices.push_back(numFace*4+3);
+							chunkIndices.push_back(numFace * 4 + 0);
+							chunkIndices.push_back(numFace * 4 + 1);
+							chunkIndices.push_back(numFace * 4 + 2);
+							chunkIndices.push_back(numFace * 4 + 0);
+							chunkIndices.push_back(numFace * 4 + 2);
+							chunkIndices.push_back(numFace * 4 + 3);
 							numFace++;
 						}
 					}
-				}
+				}*/
+				//std::cout << (int)x << " " << (int)y << " " << (int)z << "\n";
+				blockList[Coor2Pos(Coor(x,y,z))].getFace(*this, Coor(x, y, z));
+				
 			}
 		}
 	}
+	std::cout << "-1";
 	//std::cout << numFace << " " << chunkIndices.size();
 	//std::cout << chunkIndices.size() << "\n";
 	if (chunkIndices.size()==0)
@@ -115,7 +118,6 @@ void Chunk::updateFace()
 		ChunkDoRender = false;
 		return;
 	}
-	else ChunkDoRender = true;
 	if (_VAO != nullptr) _VAO->Delete();
 	_VAO = new VAO;
 	_VBO = new VBO(&chunkVertex[0].Position, chunkVertex.size() * sizeof(vertex));
@@ -125,6 +127,7 @@ void Chunk::updateFace()
 	_VAO->Unbind();
 	_VBO->Delete();
 	_EBO->Delete();
+	ChunkDoRender = true;
 }
 
 void Chunk::render(GLuint ShaderProgram)

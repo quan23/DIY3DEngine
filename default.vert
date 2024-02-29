@@ -69,6 +69,7 @@ void main()
 
 	fPos = ver + vertex[indices[data]] + vec3(chunkX*CHUNK_WIDTH,chunkY*CHUNK_HEIGHT,chunkZ*CHUNK_LENGTH);
 	gl_Position = camera * vec4(fPos, 1.0f);
+
 	
 	switch(data/4)
 	{

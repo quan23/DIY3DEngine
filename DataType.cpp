@@ -8,10 +8,7 @@ Coor::Coor(signed char x, signed char y, signed char z) : x(x), y(y), z(z)
 
 Coor Coor::operator+(const Coor& coor)
 {
-	this->x += coor.x;
-	this->y += coor.y;
-	this->z += coor.z;
-	return *this;
+	return Coor(this->x+coor.x,this->y+coor.y,this->z+coor.z);
 }
 
 bool Coor::operator==(const Coor& Coor)
@@ -31,10 +28,13 @@ worldCoor::worldCoor(int x, int y, int z) : x(x), y(y), z(z)
 
 worldCoor worldCoor::operator+(const worldCoor& coor)
 {
-	this->x += coor.x;
-	this->y += coor.y;
-	this->z += coor.z;
-	return *this;
+	return worldCoor(this->x + coor.x, this->y + coor.y, this->z + coor.z);
+}
+
+std::ostream& operator<<(std::ostream& stream, const Coor& coor)
+{
+	stream << (int)coor.x << " " << (int)coor.y << " " << (int)coor.z;
+	return stream;
 }
 
 std::ostream& operator<<(std::ostream& stream, const worldCoor& coor)

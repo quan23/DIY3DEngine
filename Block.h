@@ -10,6 +10,8 @@
 #include "Texture.h"
 #include "DataType.h"
 
+class Chunk;
+
 class Block
 {
 	public:
@@ -17,12 +19,13 @@ class Block
 		{
 			TOP = 0, NORTH = 1, WEST = 2, SOUTH = 3, EAST = 4, BOTTOM = 5
 		};
-		static glm::vec3 vertex[];
-		static GLushort indices[];
+		static glm::vec3 Vertex[];
+		static GLushort Indices[];
+		static glm::vec2 TextureCoor[4];
 		char blockID;
 		Block(char blockID = 0);
-		static face getFace(faceID face);
-		static glm::vec2 TextureCoor[4];
+		//static face getFace(faceID face);
+		void getFace(Chunk& chunk, Coor coor);
 	private:
 
 };
