@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Image Include="..\..\..\Downloads\grass_block_top.png" />
     <Image Include="cheese.png" />
     <Image Include="Dirt.png" />
     <Image Include="HD.png" />

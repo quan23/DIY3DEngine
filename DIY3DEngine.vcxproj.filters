@@ -39,6 +39,9 @@
     <Image Include="planksSpec.png">
       <Filter>Resource Files\Textures</Filter>
     </Image>
+    <Image Include="..\..\..\Downloads\grass_block_top.png">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ShaderClass.cpp">

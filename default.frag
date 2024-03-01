@@ -5,6 +5,7 @@ in float lVal;
 in vec3 fPos;
 in vec2 tPos;
 in vec3 fNor;
+//in int Data;
 
 uniform sampler2D tex0;
 uniform sampler2D tex1;
@@ -48,7 +49,10 @@ void main()
 {
     Nor = normalize(fNor);
     cDir = normalize(cPos-fPos);
+    //int k = Data;
+    //if (k == 0)
     tCol = texture(tex0, tPos);
+    //else tCol = texture(tex1, tPos);
     //fSpe = texture(tex1, tPos);
     //vec3 tCol = fCol;
     FragColor = vec4(tCol.xyz*lVal,1.0f);

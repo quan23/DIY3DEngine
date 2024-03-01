@@ -24,7 +24,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	int sWidth = 1280, sHeight = 960;
+	int sWidth = 1280, sHeight = 720;
 
 	GLFWwindow *window = glfwCreateWindow(sWidth, sHeight, "Main", NULL, NULL);
 	if (window == NULL)
@@ -52,9 +52,9 @@ int main()
 	camera Camera(sWidth, sHeight);
 	GLuint cPosID = glGetUniformLocation(ShaderProgram.ID, "cPos");
 
-	Texture plank("planks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	Texture plank("grass_block_top.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
 	plank.linkTex(ShaderProgram, "tex0", 0);
-	Texture plankSpe("planksSpec.png", GL_TEXTURE_2D, GL_TEXTURE1, GL_RED, GL_UNSIGNED_BYTE);
+	Texture plankSpe("grass_block_side.png", GL_TEXTURE_2D, GL_TEXTURE1, GL_RGB, GL_UNSIGNED_BYTE);
 	plankSpe.linkTex(ShaderProgram, "tex1", 1);
 
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lDir"), 1, &normalize(vec3(-0.6f,1.0f,0.2f))[0]);
@@ -76,7 +76,7 @@ int main()
 	{
 		tEnd = glfwGetTime();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		Camera.cMatrix(70.0f, 0.1f, 1000.0f, cameraID);
+		Camera.cMatrix(90.0f, 0.1f, 1000.0f, cameraID);
 		world.loadWorld(Camera.WorldCoor, 3);
 		//thread render(&World::renderWorld, ref(world));
 		world.renderWorld();

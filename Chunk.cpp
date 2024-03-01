@@ -82,35 +82,11 @@ void Chunk::updateFace()
 		{
 			for (char y = 0; y < CHUNK_HEIGHT; y++)
 			{
-				/*if (getBlock(Coor(x, y, z))->blockID != 0)
-				{
-					for (char face = Block::faceID::TOP; face <= Block::faceID::BOTTOM; face++)
-					{
-						if (getBlock(Coor(x, y, z) + nearBlock[face]) == nullptr || getBlock(Coor(x, y, z) + nearBlock[face])->blockID == 0)
-						{
-							for (char i = 0; i < 4; i++)
-							{
-								chunkVertex.push_back(vertex(Coor2Pos(Coor(x, y, z)), (face << 2) + i));
-								numVertex++;
-								totalIndices++;
-							}
-							chunkIndices.push_back(numFace * 4 + 0);
-							chunkIndices.push_back(numFace * 4 + 1);
-							chunkIndices.push_back(numFace * 4 + 2);
-							chunkIndices.push_back(numFace * 4 + 0);
-							chunkIndices.push_back(numFace * 4 + 2);
-							chunkIndices.push_back(numFace * 4 + 3);
-							numFace++;
-						}
-					}
-				}*/
-				//std::cout << (int)x << " " << (int)y << " " << (int)z << "\n";
 				blockList[Coor2Pos(Coor(x,y,z))].getFace(*this, Coor(x, y, z));
-				
 			}
 		}
 	}
-	std::cout << "-1";
+	//std::cout << "-1";
 	//std::cout << numFace << " " << chunkIndices.size();
 	//std::cout << chunkIndices.size() << "\n";
 	if (chunkIndices.size()==0)

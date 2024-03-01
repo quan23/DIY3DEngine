@@ -15,7 +15,7 @@ const vec3 vertex[] = vec3[]
 	vec3(1.0f,1.0f,1.0f)
 );
 
-const unsigned short indices[] = unsigned short[]
+const int indices[] = int[]
 (
 	3,4,7,2,
 	6,7,4,5,
@@ -36,6 +36,7 @@ out float lVal;
 out vec3 fPos;
 out vec2 tPos;
 out vec3 fNor;
+//out int Data;
 
 uniform mat4 camera;
 uniform mat4 model;
@@ -86,4 +87,5 @@ void main()
 			lVal = 0.2f;
 			break;
 	}
+	//Data = data/4;
 }
