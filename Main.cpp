@@ -52,11 +52,12 @@ int main()
 	camera Camera(sWidth, sHeight);
 	GLuint cPosID = glGetUniformLocation(ShaderProgram.ID, "cPos");
 
-	Texture plank("grass_block_top.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
+	Texture plank("grass_block_top.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	plank.linkTex(ShaderProgram, "tex0", 0);
 	Texture plankSpe("grass_block_side.png", GL_TEXTURE_2D, GL_TEXTURE1, GL_RGB, GL_UNSIGNED_BYTE);
 	plankSpe.linkTex(ShaderProgram, "tex1", 1);
 
+	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lPos"), 1, &vec3(10.0f, 10.0f, 10.0f)[0]);
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lDir"), 1, &normalize(vec3(-0.6f,1.0f,0.2f))[0]);
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lCol"), 1, &vec3(1.0f, 1.0f, 1.0f)[0]);
 
@@ -71,13 +72,15 @@ int main()
 
 	World world(ShaderProgram.ID);
 	//thread load((&World::loadWorld), ref(world), Camera.WorldCoor, 3);
-	Camera.setSpeed(50.0f);
+	Camera.setSpeed(10.0f);
+	int iTime = 0;
 	while (!glfwWindowShouldClose(window)&&!(glfwGetKey(window,GLFW_KEY_BACKSPACE)==GLFW_PRESS))
 	{
 		tEnd = glfwGetTime();
+		glUniform1i(glGetUniformLocation(ShaderProgram.ID, "time"), ++iTime);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Camera.cMatrix(90.0f, 0.1f, 1000.0f, cameraID);
-		world.loadWorld(Camera.WorldCoor, 3);
+		world.loadWorld(Camera.WorldCoor, 4);
 		//thread render(&World::renderWorld, ref(world));
 		world.renderWorld();
 		Camera.cInput(window,tEnd-tStart);

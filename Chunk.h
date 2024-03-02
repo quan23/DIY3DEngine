@@ -46,7 +46,6 @@ class Chunk
 		Block* getBlock(Coor Coor);
 		Block* getBlock(GLushort Pos);
 		GLushort numVertex = 0;
-		Chunk* NeigborChunk[6];
 	private:
 		
 		World* world;

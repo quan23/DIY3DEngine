@@ -49,13 +49,14 @@ uniform int chunkX;
 uniform int chunkY;
 uniform int chunkZ;
 
+uniform int time;
 void main()
 {
 
 	//fNor = aNor;
 	//tPos = tCor;
 	//fCol = (aNor + vec3(1.0f))/2.0f;
-	tPos = texCoor[data%4];
+	tPos = (texCoor[data%4]+vec2(0.001f*time,0.0f));
 
 	ivec3 ver;
 	int Pos = aPos;
@@ -66,11 +67,8 @@ void main()
 	ver.y = Pos % CHUNK_HEIGHT;
 	Pos = Pos / CHUNK_HEIGHT;
 
-
-
 	fPos = ver + vertex[indices[data]] + vec3(chunkX*CHUNK_WIDTH,chunkY*CHUNK_HEIGHT,chunkZ*CHUNK_LENGTH);
 	gl_Position = camera * vec4(fPos, 1.0f);
-
 	
 	switch(data/4)
 	{
@@ -85,6 +83,27 @@ void main()
 			break;
 		case 5:
 			lVal = 0.2f;
+			break;
+	}
+	switch(data/4)
+	{
+		case 0:
+			fNor = vec3(0.0f,1.0f,0.0f);
+			break;
+		case 1:
+			fNor = vec3(0.0f,0.0f,1.0f);
+			break;
+		case 2:
+			fNor = vec3(-1.0f,0.0f,0.0f);
+			break;
+		case 3:
+			fNor = vec3(0.0f,0.0f,-1.0f);
+			break;
+		case 4:
+			fNor = vec3(1.0f,1.0f,0.0f);
+			break;
+		case 5:
+			fNor = vec3(0.0f,-1.0f,0.0f);
 			break;
 	}
 	//Data = data/4;
