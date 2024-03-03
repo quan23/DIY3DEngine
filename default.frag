@@ -48,7 +48,7 @@ vec4 SkyLight()
 void main()
 {
     Nor = normalize(fNor);
-    cDir = normalize(cPos-round(fPos*16.0f)/16.0f);
+    cDir = normalize(cPos-round(fPos*8.0f)/8.0f);
     //int k = Data;
     tCol = texture(tex0, tPos);
     //fSpe = texture(tex1, tPos);

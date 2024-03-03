@@ -46,6 +46,7 @@ class Chunk
 		Block* getBlock(Coor Coor);
 		Block* getBlock(GLushort Pos);
 		GLushort numVertex = 0;
+		void pushToGPU();
 	private:
 		
 		World* world;

@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <vector>
 #include <queue>
+#include <thread>
 #include "DataType.h"
 #include "Chunk.h"
 
@@ -13,18 +14,33 @@ class World
 		std::unordered_map <unsigned long long, Chunk*> worldMap;
 		std::vector <Chunk*> renderChunk;
 		std::queue <Chunk*> updatedChunk;
+		std::queue <Chunk*> ChunkToPush;
+		worldCoor worldAnchor = worldCoor(0,0,0);
+
 		World(GLuint ShaderProgram);
-		static unsigned long long ChunkPos(worldCoor coor);
+
 		void loadWorld(worldCoor Center, GLushort radian);
 		void renderWorld();
 		void addChunk(int x, int y, int z);
 		void loadChunk(int x, int y, int z);
 		void reloadWorld();
+
+		static unsigned long long ChunkPos(worldCoor coor);
 		Chunk* getChunk(worldCoor coor);
+
 		static worldCoor inWhatChunk(int x, int y, int z);
 		static worldCoor inWhatChunk(Coor coor);
+
 		GLuint ShaderProgram;
+
+		void startLoading();
+		void endloading();
+		void pushAllChunk();
+		void updateWorldAnchor(worldCoor newAnchor);
 	private:
+		std::thread* loadingThread = nullptr;
+		void loadingLoop();
+		bool doLoop = false;
 };
 
 #endif // !WOTLD_CLASS_H

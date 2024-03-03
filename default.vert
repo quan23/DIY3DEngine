@@ -56,7 +56,8 @@ void main()
 	//fNor = aNor;
 	//tPos = tCor;
 	//fCol = (aNor + vec3(1.0f))/2.0f;
-	tPos = (texCoor[data%4]+vec2(0.001f*time,0.0f));
+	//tPos = (texCoor[data%4]+vec2(0.001f*time,0.0f));
+	tPos = texCoor[data%4];
 
 	ivec3 ver;
 	int Pos = aPos;
@@ -69,7 +70,6 @@ void main()
 
 	fPos = ver + vertex[indices[data]] + vec3(chunkX*CHUNK_WIDTH,chunkY*CHUNK_HEIGHT,chunkZ*CHUNK_LENGTH);
 	gl_Position = camera * vec4(fPos, 1.0f);
-	
 	switch(data/4)
 	{
 		case 0:

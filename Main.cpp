@@ -49,7 +49,7 @@ int main()
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
 	GLuint cameraID = glGetUniformLocation(ShaderProgram.ID, "camera");
-	camera Camera(sWidth, sHeight);
+	camera Camera(sWidth, sHeight, glm::vec3(10.f));
 	GLuint cPosID = glGetUniformLocation(ShaderProgram.ID, "cPos");
 
 	Texture plank("grass_block_top.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
@@ -69,10 +69,10 @@ int main()
 	plankSpe.Bind();
 	mat4 rota = mat4(1.0f);
 	rota = rotate(rota, radians(0.1f), vec3(0.0f, 1.0f, 0.0f));
-
 	World world(ShaderProgram.ID);
-	//thread load((&World::loadWorld), ref(world), Camera.WorldCoor, 3);
-	Camera.setSpeed(10.0f);
+	world.startLoading();
+	
+	Camera.setSpeed(1000.0f);
 	int iTime = 0;
 	while (!glfwWindowShouldClose(window)&&!(glfwGetKey(window,GLFW_KEY_BACKSPACE)==GLFW_PRESS))
 	{
@@ -80,8 +80,9 @@ int main()
 		glUniform1i(glGetUniformLocation(ShaderProgram.ID, "time"), ++iTime);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Camera.cMatrix(90.0f, 0.1f, 1000.0f, cameraID);
-		world.loadWorld(Camera.WorldCoor, 4);
-		//thread render(&World::renderWorld, ref(world));
+		//std::cout << -4;
+		world.updateWorldAnchor(Camera.WorldCoor);
+		world.pushAllChunk();
 		world.renderWorld();
 		Camera.cInput(window,tEnd-tStart);
 		glUniform3fv(cPosID, 1, &Camera.cPosition[0]);
@@ -89,6 +90,7 @@ int main()
 		glfwPollEvents();
 		tStart = tEnd;
 	}
+	world.endloading();
 	plank.Delete();
 	plankSpe.Delete();
 	ShaderProgram.Delete();

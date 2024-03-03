@@ -57,6 +57,7 @@ void World::renderWorld()
 				chunk.second->render(ShaderProgram);*/
 		if (chunk->ChunkDoRender) chunk->render(ShaderProgram);
 	}
+	//std::cout << Chunk::totalIndices << "\n";
 }
 
 void World::addChunk(int x, int y, int z)
@@ -100,6 +101,7 @@ void World::reloadWorld()
 			//std::cout << Chunk::totalIndices << "\n";
 		}
 	}
+	//std::cout << -2;
 	//updatedChunk.clear();
 	//std::cout << renderChunk.size() << " " << Chunk::totalIndices << "\n";
 }
@@ -119,4 +121,48 @@ worldCoor World::inWhatChunk(int x, int y, int z)
 worldCoor World::inWhatChunk(Coor coor)
 {
 	return inWhatChunk(coor.x, coor.y, coor.z);
+}
+
+void World::startLoading()
+{
+	//if (loadingThread == nullptr && !doLoop)
+	{
+		doLoop = true;
+		loadingThread = new std::thread(&World::loadingLoop, this);
+
+	}
+}
+
+void World::endloading()
+{
+	doLoop = false;
+	loadingThread->join();
+	delete loadingThread;
+	loadingThread = nullptr;
+}
+
+void World::pushAllChunk()
+{
+	while (!ChunkToPush.empty())
+	{
+		ChunkToPush.front()->pushToGPU();
+		ChunkToPush.pop();
+	}
+}
+
+void World::updateWorldAnchor(worldCoor newAnchor)
+{
+	worldAnchor = newAnchor;
+}
+
+void World::loadingLoop()
+{
+	//std::cout << this << "\n";
+	while (doLoop)
+	{
+		loadWorld(worldAnchor, 5);
+		
+		//std::cout << -2;
+	}
+	//std::cout << -1;
 }
