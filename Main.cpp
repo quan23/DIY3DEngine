@@ -1,11 +1,10 @@
 #include <iostream>
-#include <glad/glad.h>
-#include <glfw/GLFW3.h>
 #include <stb/stb_image.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <thread>
 
+#include "Window.h"
 #include "ShaderClass.h"
 #include "Texture.h"
 #include "Camera.h"
@@ -20,33 +19,13 @@ int main()
 {
 	using namespace std;
 	using namespace glm;
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	int sWidth = 1280, sHeight = 720;
-
-	GLFWwindow *window = glfwCreateWindow(sWidth, sHeight, "Main", NULL, NULL);
-	if (window == NULL)
-	{
-		std::cout << "fail for some fucking reason \n";
-		glfwTerminate();
-		return -1;
-	}
-	glfwMakeContextCurrent(window);
-	gladLoadGL();
-	glViewport(0, 0, sWidth, sHeight);
 	
+	Window window(sWidth, sHeight, "Main");
 	double tStart, tEnd;
 
 	Shader ShaderProgram("default.vert", "default.frag");
 	stbi_set_flip_vertically_on_load(true);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_CULL_FACE);
-	//glClearColor(0.4f, 0.5f, 0.5f, 1.0f);
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
 	GLuint cameraID = glGetUniformLocation(ShaderProgram.ID, "camera");
 	camera Camera(sWidth, sHeight, glm::vec3(10.f));
@@ -62,7 +41,7 @@ int main()
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lCol"), 1, &vec3(1.0f, 1.0f, 1.0f)[0]);
 
 	ShaderProgram.Activate();
-	glfwSetCursorPos(window, (double)sWidth / 2, (double)sHeight / 2);
+	glfwSetCursorPos(window.getWindow(), (double)sWidth / 2, (double)sHeight / 2);
 	tStart = glfwGetTime();
 	//vec3 lPos = vec3(-5.0f,5.0f,5.0f);
 	plank.Bind();
@@ -74,7 +53,7 @@ int main()
 	
 	Camera.setSpeed(1000.0f);
 	int iTime = 0;
-	while (!glfwWindowShouldClose(window)&&!(glfwGetKey(window,GLFW_KEY_BACKSPACE)==GLFW_PRESS))
+	while (!window.shouldClose() && !(glfwGetKey(window.getWindow(), GLFW_KEY_BACKSPACE) == GLFW_PRESS))
 	{
 		tEnd = glfwGetTime();
 		glUniform1i(glGetUniformLocation(ShaderProgram.ID, "time"), ++iTime);
@@ -84,18 +63,17 @@ int main()
 		world.updateWorldAnchor(Camera.WorldCoor);
 		world.pushAllChunk();
 		world.renderWorld();
-		Camera.cInput(window,tEnd-tStart);
+		Camera.cInput(window.getWindow(), tEnd - tStart);
 		glUniform3fv(cPosID, 1, &Camera.cPosition[0]);
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(window.getWindow());
 		glfwPollEvents();
 		tStart = tEnd;
 	}
+	std::cout << Chunk::totalIndices;
 	world.endloading();
 	plank.Delete();
 	plankSpe.Delete();
 	ShaderProgram.Delete();
-	glfwDestroyWindow(window);
-	glfwTerminate();
 	return 0;
 }
 
