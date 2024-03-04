@@ -88,24 +88,12 @@ void World::loadChunk(int x, int y, int z)
 
 void World::reloadWorld()
 {
-	//std::cout << renderChunk.size();
-	//std::cout << updatedChunk.size();
 	if (!updatedChunk.empty())
 	{
 		updatedChunk.front()->updateFace();
 		updatedChunk.pop();
-		//if (chunk->ChunkDoRender)
-		{
-			//renderChunk.push_back(chunk);
-			//std::cout << chunk->ChunkCoor << " " << chunk->numVertex << "\n";
-			//std::cout << Chunk::totalIndices << "\n";
-		}
 	}
-	//std::cout << -2;
-	//updatedChunk.clear();
-	//std::cout << renderChunk.size() << " " << Chunk::totalIndices << "\n";
 }
-
 
 Chunk* World::getChunk(worldCoor coor)
 {
@@ -125,7 +113,7 @@ worldCoor World::inWhatChunk(Coor coor)
 
 void World::startLoading()
 {
-	//if (loadingThread == nullptr && !doLoop)
+	if (loadingThread == nullptr && !doLoop)
 	{
 		doLoop = true;
 		loadingThread = new std::thread(&World::loadingLoop, this);
@@ -155,14 +143,15 @@ void World::updateWorldAnchor(worldCoor newAnchor)
 	worldAnchor = newAnchor;
 }
 
+void World::updataRenderDist(int renderDist)
+{
+	this->renderDist = renderDist;
+}
+
 void World::loadingLoop()
 {
-	//std::cout << this << "\n";
 	while (doLoop)
 	{
 		loadWorld(worldAnchor, 5);
-		
-		//std::cout << -2;
 	}
-	//std::cout << -1;
 }

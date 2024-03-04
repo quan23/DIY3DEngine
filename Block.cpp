@@ -43,7 +43,7 @@ face Block::getFace(Block::faceID Face)
 	return face(Vertex[Indices[Face * 4]], Vertex[Indices[Face * 4 + 1]], Vertex[Indices[Face * 4 + 2]], Vertex[Indices[Face * 4 + 3]]);
 }
 */
-void Block::getFace(Chunk& chunk, Coor coor)
+void Block::getFace(Chunk& chunk, Coor coor) const
 {
 	if (blockID != 0)
 	{

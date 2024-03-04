@@ -47,12 +47,12 @@ Chunk::Chunk(int x, int y, int z, World* world)
 	//updateFace();
 }
 
-unsigned int Chunk::Coor2Pos(Coor coor)
+unsigned int Chunk::Coor2Pos(Coor coor) const
 {
 	return (coor.x + (coor.y * CHUNK_WIDTH + coor.z) * CHUNK_LENGTH);
 }
 
-Coor Chunk::Pos2Coor(unsigned int pos)
+Coor Chunk::Pos2Coor(unsigned int pos) const
 {
 	return Coor(char((pos % (CHUNK_WIDTH * CHUNK_LENGTH)) % CHUNK_WIDTH), char(pos / (CHUNK_WIDTH * CHUNK_LENGTH)), char((pos % (CHUNK_WIDTH * CHUNK_LENGTH)) / CHUNK_LENGTH));
 }
@@ -99,8 +99,8 @@ void Chunk::updateFace()
 	//else std::cout << numFace*6 - chunkIndices .size() << " ";
 }
 
-void Chunk::render(GLuint ShaderProgram)
-{
+void Chunk::render(GLuint ShaderProgram) const
+{ 
 	if (ChunkDoRender)
 	{
 		_VAO->Bind();
@@ -115,7 +115,7 @@ void Chunk::render(GLuint ShaderProgram)
 	}
 }
 
-Block* Chunk::getBlock(Coor coor)
+Block* Chunk::getBlock(Coor coor) const
 {
 	if (EmptyChunk) return nullptr;
 	if ((coor.x < 0) || (coor.x >= CHUNK_WIDTH) || (coor.y < 0) || (coor.y >= CHUNK_HEIGHT) || (coor.z < 0) || (coor.z >= CHUNK_LENGTH))
@@ -139,7 +139,7 @@ Block* Chunk::getBlock(Coor coor)
 	return nullptr;
 }
 
-Block* Chunk::getBlock(GLushort Pos)
+Block* Chunk::getBlock(GLushort Pos) const
 {
 	if (EmptyChunk) return nullptr;
 	if ((Pos >= 0) && (Pos < CHUNK_SIZE)) return &(blockList[Pos]);

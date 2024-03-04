@@ -12,20 +12,21 @@
 class camera
 {
 	public:
-		glm::vec3 cPosition;
-		glm::vec3 cOrientation = glm::vec3(0.0f, 0.0f, -1.0f);
-		glm::vec3 cUp = glm::vec3(0.0f, 1.0f, 0.0f);
-		glm::vec3 cMove = glm::vec3(0.0f);
-		int cWidth, cHeight;
-		worldCoor WorldCoor;
-
-		float speed = 10.0f, Xsensitivity = 0.5f, Ysensitivity = 0.5f;
-		float yaw = 0.0f, pitch = 0.0f;
-	
-		camera(int Width, int Height, glm::vec3 position = glm::vec3(0.0f));
+		camera(int Width, int Height, glm::vec3 Position = glm::vec3(0.0f));
+		worldCoor getWorldCoor() const;
 		void cMatrix(float Fov, float fNear, float fFar, GLuint uniformID);
 		void cInput(GLFWwindow* window, double fram);
 		void setSpeed(float speed);
+		glm::vec3 getCoor() const;
+	private:
+		glm::vec3 Position;
+		glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, -1.0f);
+		glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 Move = glm::vec3(0.0f);
+		int Width, Height;
+		float Speed = 10.0f, Xsensitivity = 0.5f, Ysensitivity = 0.5f;
+		float Yaw = 0.0f, Pitch = 0.0f;
+		worldCoor WorldCoor;
 };
 
 #endif

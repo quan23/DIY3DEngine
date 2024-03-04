@@ -25,7 +25,7 @@ class Block
 		char blockID;
 		Block(char blockID = 0);
 		//static face getFace(faceID face);
-		void getFace(Chunk& chunk, Coor coor);
+		void getFace(Chunk& chunk, Coor coor) const;
 	private:
 
 };

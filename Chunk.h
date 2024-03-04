@@ -6,12 +6,6 @@ constexpr signed char CHUNK_LENGTH = 16;
 constexpr signed char CHUNK_HEIGHT = 16;
 constexpr unsigned int CHUNK_SIZE = CHUNK_WIDTH*CHUNK_LENGTH*CHUNK_HEIGHT;
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-#include <glm/gtx/vector_angle.hpp>
 #include <vector>
 
 #include "ShaderClass.h"
@@ -39,12 +33,12 @@ class Chunk
 		std::vector <GLushort> chunkIndices;
 
 		Chunk(int x, int y, int z, World* world);
-		unsigned int Coor2Pos(Coor coor);
-		Coor Pos2Coor(unsigned int pos);
+		unsigned int Coor2Pos(Coor coor) const;
+		Coor Pos2Coor(unsigned int pos) const;
 		void updateFace();
-		void render(GLuint ShaderProgram);
-		Block* getBlock(Coor Coor);
-		Block* getBlock(GLushort Pos);
+		void render(GLuint ShaderProgram) const;
+		Block* getBlock(Coor Coor) const;
+		Block* getBlock(GLushort Pos) const;
 		GLushort numVertex = 0;
 		void pushToGPU();
 	private:

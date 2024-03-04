@@ -37,10 +37,13 @@ class World
 		void endloading();
 		void pushAllChunk();
 		void updateWorldAnchor(worldCoor newAnchor);
+		void updataRenderDist(int renderDist);
+
 	private:
 		std::thread* loadingThread = nullptr;
 		void loadingLoop();
 		bool doLoop = false;
+		int renderDist = 0;
 };
 
 #endif // !WOTLD_CLASS_H
