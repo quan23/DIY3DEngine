@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stb/stb_image.h>
+#include <stb/stb_image_write.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <thread>
@@ -31,7 +32,7 @@ int main()
 	GLuint cameraID = glGetUniformLocation(ShaderProgram.ID, "camera");
 	GLuint cPosID = glGetUniformLocation(ShaderProgram.ID, "cPos");
 
-	Texture plank("grass_block_top.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	Texture plank("Default/grass_block_top.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RED, GL_UNSIGNED_BYTE);
 	plank.linkTex(ShaderProgram, "tex0", 0);
 	Texture plankSpe("grass_block_side.png", GL_TEXTURE_2D, GL_TEXTURE1, GL_RGB, GL_UNSIGNED_BYTE);
 	plankSpe.linkTex(ShaderProgram, "tex1", 1);
@@ -51,22 +52,28 @@ int main()
 	World world(ShaderProgram.ID);
 	world.startLoading();
 	
-	Camera.setSpeed(1000.0f);
+	Camera.setSpeed(10.0f);
 	int iTime = 0;
 
 	while (!window.shouldClose() && !(glfwGetKey(window.getWindow(), GLFW_KEY_BACKSPACE) == GLFW_PRESS))
 	{
 		tEnd = glfwGetTime();
+
 		glUniform1i(glGetUniformLocation(ShaderProgram.ID, "time"), ++iTime);
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		Camera.cMatrix(90.0f, 0.1f, 1000.0f, cameraID);
+
 		world.updateWorldAnchor(Camera.getWorldCoor());
 		world.pushAllChunk();
 		world.renderWorld();
+
 		Camera.cInput(window.getWindow(), tEnd - tStart);
 		glUniform3fv(cPosID, 1, &Camera.getCoor()[0]);
-		glfwSwapBuffers(window.getWindow());
-		glfwPollEvents();
+
+		window.update();
+
 		tStart = tEnd;
 	}
 	std::cout << Chunk::totalIndices;

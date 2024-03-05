@@ -50,7 +50,7 @@ void main()
     Nor = normalize(fNor);
     cDir = normalize(cPos-round(fPos*8.0f)/8.0f);
     //int k = Data;
-    tCol = texture(tex0, tPos);
+    tCol = texture(tex0, tPos).x*vec4(100.0f/255.0f,198.0f/255.0f,67.0f/255.0f,1.0f);
     //fSpe = texture(tex1, tPos);
     //vec3 tCol = fCol;
     FragColor = vec4(tCol.xyz*lVal,1.0f);
