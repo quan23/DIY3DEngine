@@ -14,6 +14,13 @@ Coor Chunk::nearBlock[] =
 
 int Chunk::totalIndices = 0;
 
+template <typename T>
+void cleanMem(std::vector<T>& vector)
+{
+	vector.clear();
+	vector.shrink_to_fit();
+}
+
 Chunk::Chunk(int x, int y, int z, World* world)
 {
 	//std::cout << "-1\n";
@@ -47,6 +54,17 @@ Chunk::Chunk(int x, int y, int z, World* world)
 	//updateFace();
 }
 
+Chunk::~Chunk()
+{
+	totalIndices -= numVertex;
+	delete[] blockList;
+	cleanMem(chunkVertex);
+	cleanMem(chunkIndices);
+	if (_VAO != nullptr)
+		_VAO->Delete();
+
+}
+
 unsigned int Chunk::Coor2Pos(Coor coor) const
 {
 	return (coor.x + (coor.y * CHUNK_WIDTH + coor.z) * CHUNK_LENGTH);
@@ -64,8 +82,6 @@ void Chunk::updateFace()
 	{
 		return;
 	}
-	chunkVertex.clear();
-	chunkIndices.clear();
 	GLushort thisIndice[4];
 	totalIndices -= numVertex;
 	numVertex = 0;
@@ -157,6 +173,8 @@ void Chunk::pushToGPU()
 	_VAO->Unbind();
 	_VBO->Delete();
 	_EBO->Delete();
+	cleanMem(chunkVertex);
+	cleanMem(chunkIndices);
 	ChunkDoRender = true;
 }
 

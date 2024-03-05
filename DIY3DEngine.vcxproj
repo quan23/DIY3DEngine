@@ -74,18 +74,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>C:\Users\COFFEE LATE\source\repos\DIY3DEngine\Libraries\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\COFFEE LATE\source\repos\DIY3DEngine\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(ShortProjectName)\$(Configuration)\Tmp\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\Users\COFFEE LATE\source\repos\DIY3DEngine\Libraries\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\COFFEE LATE\source\repos\DIY3DEngine\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(ShortProjectName)\$(Configuration)\Tmp\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)\Libraries\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(ShortProjectName)\$(Configuration)\Tmp\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)\Libraries\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IntDir>$(ShortProjectName)\$(Configuration)\Tmp\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -183,6 +187,7 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="DataType.h" />
     <ClInclude Include="EBO.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ShaderClass.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="VAO.h" />

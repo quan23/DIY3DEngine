@@ -32,7 +32,7 @@ int main()
 	GLuint cameraID = glGetUniformLocation(ShaderProgram.ID, "camera");
 	GLuint cPosID = glGetUniformLocation(ShaderProgram.ID, "cPos");
 
-	Texture plank("Default/grass_block_top.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RED, GL_UNSIGNED_BYTE);
+	Texture plank("Default/stone.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RED, GL_UNSIGNED_BYTE);
 	plank.linkTex(ShaderProgram, "tex0", 0);
 	Texture plankSpe("grass_block_side.png", GL_TEXTURE_2D, GL_TEXTURE1, GL_RGB, GL_UNSIGNED_BYTE);
 	plankSpe.linkTex(ShaderProgram, "tex1", 1);
@@ -50,6 +50,7 @@ int main()
 	mat4 rota = mat4(1.0f);
 	rota = rotate(rota, radians(0.1f), vec3(0.0f, 1.0f, 0.0f));
 	World world(ShaderProgram.ID);
+	world.updataRenderDist(5);
 	world.startLoading();
 	
 	Camera.setSpeed(10.0f);

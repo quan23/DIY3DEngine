@@ -42,6 +42,7 @@ class World
 	private:
 		std::thread* loadingThread = nullptr;
 		void loadingLoop();
+		bool tooFar(worldCoor& chunkCoor) const;
 		bool doLoop = false;
 		int renderDist = 0;
 };

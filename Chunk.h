@@ -23,9 +23,10 @@ class Chunk
 	public:
 		Block* blockList = new Block[CHUNK_SIZE];
 		worldCoor ChunkCoor;
-		bool ChunkDoRender = false, EmptyChunk = true;
+		bool ChunkDoRender = false, EmptyChunk = true, ShouldUpdate = false;
 		static int totalIndices;
 		GLushort numFace = 0;
+		GLushort numVertex = 0;
 
 		static Coor nearBlock[];
 
@@ -33,14 +34,17 @@ class Chunk
 		std::vector <GLushort> chunkIndices;
 
 		Chunk(int x, int y, int z, World* world);
+		~Chunk();
+
+
 		unsigned int Coor2Pos(Coor coor) const;
 		Coor Pos2Coor(unsigned int pos) const;
 		void updateFace();
 		void render(GLuint ShaderProgram) const;
 		Block* getBlock(Coor Coor) const;
 		Block* getBlock(GLushort Pos) const;
-		GLushort numVertex = 0;
 		void pushToGPU();
+
 	private:
 		
 		World* world;

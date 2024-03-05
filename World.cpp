@@ -50,12 +50,30 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 
 void World::renderWorld()
 {
-	for (auto& chunk : renderChunk)
+	for (auto chunk=worldMap.begin();chunk!=worldMap.end();)
 	{
-		/*if (chunk.second != NULL)
-			if (chunk.second->ChunkDoRender)
-				chunk.second->render(ShaderProgram);*/
-		if (chunk->ChunkDoRender) chunk->render(ShaderProgram);
+		if (chunk->second != NULL)
+		{
+			if (tooFar(chunk->second->ChunkCoor))
+			{
+				chunk = worldMap.erase(chunk);
+			}
+			else
+			{
+				if (chunk->second->ChunkDoRender)
+					chunk->second->render(ShaderProgram);
+				if (chunk->second->ShouldUpdate)
+				{
+					updatedChunk.push(chunk->second);
+					chunk->second->ShouldUpdate = false;
+				}
+				chunk++;
+			}
+		}
+		else
+		{
+			chunk = worldMap.erase(chunk);
+		}
 	}
 	//std::cout << Chunk::totalIndices << "\n";
 }
@@ -73,7 +91,7 @@ void World::addChunk(int x, int y, int z)
 			{
 				if (!worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]->EmptyChunk && worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]->ChunkDoRender)
 				{
-					updatedChunk.push(worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]);
+					worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])]->ShouldUpdate = true;
 
 					//std::cout << -1;
 				}
@@ -152,6 +170,11 @@ void World::loadingLoop()
 {
 	while (doLoop)
 	{
-		loadWorld(worldAnchor, 5);
+		loadWorld(worldAnchor, renderDist);
 	}
+}
+
+bool World::tooFar(worldCoor& chunkCoor) const
+{
+	return (abs(chunkCoor.x - worldAnchor.x) > renderDist) || (abs(chunkCoor.y - worldAnchor.y) > renderDist) || (abs(chunkCoor.z - worldAnchor.z) > renderDist);
 }
