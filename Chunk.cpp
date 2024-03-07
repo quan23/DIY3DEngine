@@ -24,6 +24,7 @@ void cleanMem(std::vector<T>& vector)
 Chunk::Chunk(int x, int y, int z, World* world)
 {
 	//std::cout << "-1\n";
+	Calculating = true;
 	ChunkCoor = worldCoor(x, y, z);
 	this->world = world;
 	for (char x = 0; x < CHUNK_WIDTH; x++)
@@ -78,6 +79,7 @@ Coor Chunk::Pos2Coor(unsigned int pos) const
 void Chunk::updateFace()
 {
 	ChunkDoRender = false;
+	Calculating = true;
 	if (EmptyChunk)
 	{
 		return;
@@ -149,7 +151,6 @@ Block* Chunk::getBlock(Coor coor) const
 			std::cout << "-1\n";
 		}
 		return (world->worldMap[World::ChunkPos(wCoor)]->getBlock(coor));
-		return nullptr;
 	}
 	return getBlock(Coor2Pos(coor));
 	return nullptr;
@@ -164,6 +165,7 @@ Block* Chunk::getBlock(GLushort Pos) const
 
 void Chunk::pushToGPU()
 {
+	Calculating = true;
 	if (_VAO != nullptr) _VAO->Delete();
 	_VAO = new VAO;
 	_VBO = new VBO(&chunkVertex[0].Position, numVertex * sizeof(vertex));

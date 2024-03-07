@@ -23,7 +23,7 @@ class Chunk
 	public:
 		Block* blockList = new Block[CHUNK_SIZE];
 		worldCoor ChunkCoor;
-		bool ChunkDoRender = false, EmptyChunk = true, ShouldUpdate = false;
+		bool ChunkDoRender = false, EmptyChunk = true, ShouldUpdate = false, Calculating = false;
 		static int totalIndices;
 		GLushort numFace = 0;
 		GLushort numVertex = 0;

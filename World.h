@@ -15,6 +15,7 @@ class World
 		std::vector <Chunk*> renderChunk;
 		std::queue <Chunk*> updatedChunk;
 		std::queue <Chunk*> ChunkToPush;
+		std::queue <Chunk*> ChunkToDelete;
 		worldCoor worldAnchor = worldCoor(0,0,0);
 
 		World(GLuint ShaderProgram);

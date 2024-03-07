@@ -52,7 +52,7 @@ int main()
 	World world(ShaderProgram.ID);
 	world.updataRenderDist(5);
 	world.startLoading();
-	
+	world.updateWorldAnchor(worldCoor(0,0,0));
 	Camera.setSpeed(10.0f);
 	int iTime = 0;
 
@@ -66,8 +66,11 @@ int main()
 
 		Camera.cMatrix(90.0f, 0.1f, 1000.0f, cameraID);
 
+		//world.loadWorld(Camera.getWorldCoor(), 5);
 		world.updateWorldAnchor(Camera.getWorldCoor());
 		world.pushAllChunk();
+		
+
 		world.renderWorld();
 
 		Camera.cInput(window.getWindow(), tEnd - tStart);

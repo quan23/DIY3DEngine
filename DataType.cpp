@@ -6,17 +6,17 @@ Coor::Coor(signed char x, signed char y, signed char z) : x(x), y(y), z(z)
 
 }
 
-Coor Coor::operator+(const Coor& coor)
+Coor Coor::operator+(const Coor& coor) const
 {
 	return Coor(this->x+coor.x,this->y+coor.y,this->z+coor.z);
 }
 
-bool Coor::operator==(const Coor& Coor)
+bool Coor::operator==(const Coor& Coor) const
 {
 	return (this->x == Coor.x) && (this->y == Coor.y) && (this->z == Coor.z);
 }
 
-bool Coor::operator!=(const Coor& Coor)
+bool Coor::operator!=(const Coor& Coor) const
 {
 	return !(*this == Coor);
 }
@@ -26,9 +26,19 @@ worldCoor::worldCoor(int x, int y, int z) : x(x), y(y), z(z)
 
 }
 
-worldCoor worldCoor::operator+(const worldCoor& coor)
+worldCoor worldCoor::operator+(const worldCoor& coor) const
 {
-	return worldCoor(this->x + coor.x, this->y + coor.y, this->z + coor.z);
+	return worldCoor(x + coor.x, y + coor.y, z + coor.z);
+}
+
+bool worldCoor::operator==(const worldCoor& Coor) const
+{
+	return (x == Coor.x) && (y == Coor.y) && (z == Coor.z);
+}
+
+bool worldCoor::operator!=(const worldCoor& Coor) const
+{
+	return !(*this == Coor);
 }
 
 std::ostream& operator<<(std::ostream& stream, const Coor& coor)

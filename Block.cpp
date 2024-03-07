@@ -50,7 +50,24 @@ void Block::getFace(Chunk& chunk, Coor coor) const
 		for (char face = faceID::TOP; face <= faceID::BOTTOM; face++)
 		{
 			//std::cout << coor << " " << (int)face << "\n";
-			if (chunk.getBlock(coor + Chunk::nearBlock[face]) == nullptr || chunk.getBlock(coor + Chunk::nearBlock[face])->blockID == 0)
+			if (chunk.getBlock(coor + Chunk::nearBlock[face]) == nullptr)
+			{
+				for (char i = 0; i < 4; i++)
+				{
+					chunk.chunkVertex.push_back(vertex(chunk.Coor2Pos(coor), int(face << 2) + i));
+					chunk.numVertex++;
+					Chunk::totalIndices++;
+				}
+				chunk.chunkIndices.push_back(chunk.numFace * 4 + 0);
+				chunk.chunkIndices.push_back(chunk.numFace * 4 + 1);
+				chunk.chunkIndices.push_back(chunk.numFace * 4 + 2);
+				chunk.chunkIndices.push_back(chunk.numFace * 4 + 0);
+				chunk.chunkIndices.push_back(chunk.numFace * 4 + 2);
+				chunk.chunkIndices.push_back(chunk.numFace * 4 + 3);
+				chunk.numFace++;
+				//std::cout << -1;
+			}
+			else if (chunk.getBlock(coor + Chunk::nearBlock[face])->blockID == 0)
 			{
 				for (char i = 0; i < 4; i++)
 				{

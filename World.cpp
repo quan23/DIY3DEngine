@@ -54,8 +54,9 @@ void World::renderWorld()
 	{
 		if (chunk->second != NULL)
 		{
-			if (tooFar(chunk->second->ChunkCoor))
+			if (tooFar(chunk->second->ChunkCoor)&&!chunk->second->Calculating)
 			{
+				ChunkToDelete.push(chunk->second);
 				chunk = worldMap.erase(chunk);
 			}
 			else
@@ -66,12 +67,14 @@ void World::renderWorld()
 				{
 					updatedChunk.push(chunk->second);
 					chunk->second->ShouldUpdate = false;
+					chunk->second->Calculating = true;
 				}
 				chunk++;
 			}
 		}
 		else
 		{
+			ChunkToDelete.push(chunk->second);
 			chunk = worldMap.erase(chunk);
 		}
 	}
@@ -106,6 +109,11 @@ void World::loadChunk(int x, int y, int z)
 
 void World::reloadWorld()
 {
+	if (!ChunkToDelete.empty())
+	{
+		delete ChunkToDelete.front();
+		ChunkToDelete.pop();
+	}
 	if (!updatedChunk.empty())
 	{
 		updatedChunk.front()->updateFace();
@@ -142,7 +150,7 @@ void World::startLoading()
 void World::endloading()
 {
 	doLoop = false;
-	loadingThread->join();
+	loadingThread->detach();
 	delete loadingThread;
 	loadingThread = nullptr;
 }
@@ -152,6 +160,7 @@ void World::pushAllChunk()
 	while (!ChunkToPush.empty())
 	{
 		ChunkToPush.front()->pushToGPU();
+		ChunkToPush.front()->Calculating = false;
 		ChunkToPush.pop();
 	}
 }
