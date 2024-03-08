@@ -18,11 +18,11 @@ World::World(GLuint ShaderProgram) : ShaderProgram(ShaderProgram)
 
 unsigned long long World::ChunkPos(worldCoor coor)
 {
-	unsigned long long worldPos = (coor.x + 0x7fffff) & 0xffffff;
-	worldPos <<= 16;
-	worldPos += (coor.y + 0x7fff) & 0xffff;
-	worldPos <<= 24;
-	worldPos += (coor.z + 0x7fffff) & 0xffffff;
+	unsigned long long worldPos = (coor.x + 0xfff) & 0xfff;
+	worldPos <<= 8;
+	worldPos += (coor.y + 0xff) & 0xff;
+	worldPos <<= 12;
+	worldPos += (coor.z + 0xfff) & 0xfff;
 	return worldPos;
 }
 
@@ -54,7 +54,7 @@ void World::renderWorld()
 	{
 		if (chunk->second != NULL)
 		{
-			if (tooFar(chunk->second->ChunkCoor)&&!chunk->second->Calculating)
+			if (tooFar(chunk->second->ChunkCoor)&&!(chunk->second->Calculating))
 			{
 				ChunkToDelete.push(chunk->second);
 				chunk = worldMap.erase(chunk);
@@ -74,7 +74,6 @@ void World::renderWorld()
 		}
 		else
 		{
-			ChunkToDelete.push(chunk->second);
 			chunk = worldMap.erase(chunk);
 		}
 	}

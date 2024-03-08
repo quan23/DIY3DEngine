@@ -8,12 +8,12 @@ Coor::Coor(signed char x, signed char y, signed char z) : x(x), y(y), z(z)
 
 Coor Coor::operator+(const Coor& coor) const
 {
-	return Coor(this->x+coor.x,this->y+coor.y,this->z+coor.z);
+	return Coor(x+coor.x,y+coor.y,z+coor.z);
 }
 
 bool Coor::operator==(const Coor& Coor) const
 {
-	return (this->x == Coor.x) && (this->y == Coor.y) && (this->z == Coor.z);
+	return (x == Coor.x) && (y == Coor.y) && (z == Coor.z);
 }
 
 bool Coor::operator!=(const Coor& Coor) const
