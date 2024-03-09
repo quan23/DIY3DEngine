@@ -12,7 +12,7 @@ class World
 {
 	public:
 		std::unordered_map <unsigned long long, Chunk*> worldMap;
-		std::vector <Chunk*> renderChunk;
+		std::vector <Chunk*> allChunk;
 		std::queue <Chunk*> updatedChunk;
 		std::queue <Chunk*> ChunkToPush;
 		std::queue <Chunk*> ChunkToDelete;

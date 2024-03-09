@@ -39,43 +39,34 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 				{
 					addChunk(x, y, z);
 					//std::cout << "-1\n";
+					allChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z))]);
 					
 				}
 				//std::cout << worldMap[ChunkPos(worldCoor(x, y, z))]->ChunkCoor << "\n";
 			}
 		}
 	}
-	reloadWorld();
 }
 
 void World::renderWorld()
 {
-	for (auto chunk=worldMap.begin();chunk!=worldMap.end();)
+	for (auto chunk = allChunk.begin(); chunk != allChunk.end();)
 	{
-		if (chunk->second != NULL)
+		if ((*chunk)->OutOfBound)
 		{
-			if (tooFar(chunk->second->ChunkCoor)&&!(chunk->second->Calculating))
-			{
-				ChunkToDelete.push(chunk->second);
-				chunk = worldMap.erase(chunk);
-			}
-			else
-			{
-				if (chunk->second->ChunkDoRender)
-					chunk->second->render(ShaderProgram);
-				if (chunk->second->ShouldUpdate)
-				{
-					updatedChunk.push(chunk->second);
-					chunk->second->ShouldUpdate = false;
-					chunk->second->Calculating = true;
-				}
-				chunk++;
-			}
+			ChunkToDelete.push(*chunk);
+			chunk = allChunk.erase(chunk);
 		}
 		else
 		{
-			chunk = worldMap.erase(chunk);
+			(*chunk)->render(ShaderProgram);
+			chunk++;
 		}
+	}
+	while (!ChunkToDelete.empty())
+	{
+		delete ChunkToDelete.front();
+		ChunkToDelete.pop();
 	}
 	//std::cout << Chunk::totalIndices << "\n";
 }
@@ -86,7 +77,6 @@ void World::addChunk(int x, int y, int z)
 	if (!worldMap[ChunkPos(worldCoor(x, y, z))]->EmptyChunk)
 	{
 		updatedChunk.push(worldMap[ChunkPos(worldCoor(x, y, z))]);
-		renderChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z))]);
 		for (char i = 0; i < 6; i++)
 		{
 			if (worldMap[ChunkPos(worldCoor(x, y, z) + nextChunk[i])] != NULL)
@@ -108,12 +98,37 @@ void World::loadChunk(int x, int y, int z)
 
 void World::reloadWorld()
 {
-	if (!ChunkToDelete.empty())
+	for (auto chunk=worldMap.begin();chunk!=worldMap.end();)
 	{
-		delete ChunkToDelete.front();
-		ChunkToDelete.pop();
+		if (chunk->second != NULL)
+		{
+			if (!chunk->second->Calculating)
+			{
+				if (tooFar(chunk->second->ChunkCoor))
+				{
+					chunk->second->OutOfBound = true;
+					chunk->second = NULL;
+					chunk = worldMap.erase(chunk);
+				}
+				else
+				{
+					if (chunk->second->ShouldUpdate)
+					{
+						updatedChunk.push(chunk->second);
+						chunk->second->ShouldUpdate = false;
+						chunk->second->Calculating = true;
+					}
+					chunk++;
+				}
+			}
+			else chunk++;
+		}
+		else
+		{
+			chunk = worldMap.erase(chunk);
+		}
 	}
-	if (!updatedChunk.empty())
+	while (!updatedChunk.empty())
 	{
 		updatedChunk.front()->updateFace();
 		updatedChunk.pop();
@@ -142,14 +157,14 @@ void World::startLoading()
 	{
 		doLoop = true;
 		loadingThread = new std::thread(&World::loadingLoop, this);
-
+		
 	}
 }
 
 void World::endloading()
 {
 	doLoop = false;
-	loadingThread->detach();
+	loadingThread->join();
 	delete loadingThread;
 	loadingThread = nullptr;
 }
@@ -179,6 +194,8 @@ void World::loadingLoop()
 	while (doLoop)
 	{
 		loadWorld(worldAnchor, renderDist);
+		reloadWorld();
+		std::this_thread::sleep_for(std::chrono::microseconds(100));
 	}
 }
 

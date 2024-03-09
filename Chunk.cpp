@@ -148,7 +148,7 @@ Block* Chunk::getBlock(Coor coor) const
 		if (world->worldMap[World::ChunkPos(wCoor)] == NULL)
 		{
 			return nullptr;
-			std::cout << "-1\n";
+			
 		}
 		return (world->worldMap[World::ChunkPos(wCoor)]->getBlock(coor));
 	}
