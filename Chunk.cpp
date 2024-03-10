@@ -1,6 +1,7 @@
 #include "World.h"
 #include "Block.h"
-#include "Chunk.h";
+#include "Chunk.h"
+#include <xhash>
 
 Coor Chunk::nearBlock[] =
 {
@@ -27,14 +28,17 @@ Chunk::Chunk(int x, int y, int z, World* world)
 	Calculating = true;
 	ChunkCoor = worldCoor(x, y, z);
 	this->world = world;
+	srand((ChunkCoor.x<<4)+ChunkCoor.z);
+	float multi = float(rand() % 100) / 20.0;
 	for (char x = 0; x < CHUNK_WIDTH; x++)
 	{
 		int realX = x + CHUNK_WIDTH * ChunkCoor.x;
 		for (char z = 0; z < CHUNK_LENGTH; z++)
 		{
 			int realZ = z + CHUNK_LENGTH * ChunkCoor.z;
-			char high = 8.0f + (glm::sin(float(realX)) + glm::cos(float(realZ)));
-			//std::cout << glm::sinh(float(realX)) * glm::sinh(float(realZ)) << "\n";
+			int high = multi*(glm::sin(glm::degrees(float(realX))) + glm::cos(glm::degrees(float(realZ))));
+			int shigh = (glm::sin(float(realX)) + glm::cos(float(realZ)));
+
 			for (char y = 0; y < CHUNK_HEIGHT; y++)
 			{
 				int realY = y + CHUNK_HEIGHT * ChunkCoor.y;
@@ -59,8 +63,6 @@ Chunk::~Chunk()
 {
 	totalIndices -= numVertex;
 	delete[] blockList;
-	cleanMem(chunkVertex);
-	cleanMem(chunkIndices);
 	if (_VAO != nullptr)
 		_VAO->Delete();
 

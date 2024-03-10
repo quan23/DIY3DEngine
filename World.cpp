@@ -39,8 +39,7 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 				{
 					addChunk(x, y, z);
 					//std::cout << "-1\n";
-					allChunk.push_back(worldMap[ChunkPos(worldCoor(x, y, z))]);
-					
+					newChunk.push(worldMap[ChunkPos(worldCoor(x, y, z))]);
 				}
 				//std::cout << worldMap[ChunkPos(worldCoor(x, y, z))]->ChunkCoor << "\n";
 			}
@@ -50,6 +49,11 @@ void World::loadWorld(worldCoor Center, GLushort radian)
 
 void World::renderWorld()
 {
+	while (!newChunk.empty())
+	{
+		allChunk.push_back(newChunk.front());
+		newChunk.pop();
+	}
 	for (auto chunk = allChunk.begin(); chunk != allChunk.end();)
 	{
 		if ((*chunk)->OutOfBound)
@@ -60,7 +64,7 @@ void World::renderWorld()
 		else
 		{
 			(*chunk)->render(ShaderProgram);
-			chunk++;
+			++chunk;
 		}
 	}
 	while (!ChunkToDelete.empty())

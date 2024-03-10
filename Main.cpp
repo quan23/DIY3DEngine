@@ -50,7 +50,7 @@ int main()
 	mat4 rota = mat4(1.0f);
 	rota = rotate(rota, radians(0.1f), vec3(0.0f, 1.0f, 0.0f));
 	World world(ShaderProgram.ID);
-	world.updataRenderDist(5);
+	world.updataRenderDist(10);
 	world.startLoading();
 	world.updateWorldAnchor(worldCoor(0,0,0));
 
@@ -71,7 +71,6 @@ int main()
 		//world.reloadWorld();
 		world.updateWorldAnchor(Camera.getWorldCoor());
 		world.pushAllChunk();
-		
 
 		world.renderWorld();
 
