@@ -36,7 +36,6 @@ class Chunk
 		Chunk(int x, int y, int z, World* world);
 		~Chunk();
 
-
 		unsigned int Coor2Pos(Coor coor) const;
 		Coor Pos2Coor(unsigned int pos) const;
 		void updateFace();

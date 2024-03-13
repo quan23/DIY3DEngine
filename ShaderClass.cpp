@@ -43,6 +43,39 @@ Shader::Shader(const char *VertexFile, const char *FragmentFile)
 
 }
 
+Shader::Shader(const char* VertexFile, const char* FragmentFile, const char* GeometryFile)
+{
+	std::string VertexCode = get_file_contents(VertexFile);
+	std::string FragmentCode = get_file_contents(FragmentFile);
+	std::string GeometryCode = get_file_contents(GeometryFile);
+
+	const char* VertexSource = VertexCode.c_str();
+	const char* FragmentSource = FragmentCode.c_str();
+	const char* GeometrySource = GeometryCode.c_str();
+
+	GLuint VertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(VertexShader, 1, &VertexSource, NULL);
+	glCompileShader(VertexShader);
+
+	GLuint FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(FragmentShader, 1, &FragmentSource, NULL);
+	glCompileShader(FragmentShader);
+	
+	GLuint GeometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+	glShaderSource(GeometryShader, 1, &GeometrySource, NULL);
+	glCompileShader(GeometryShader);
+
+	ID = glCreateProgram();
+	glAttachShader(ID, VertexShader);
+	glAttachShader(ID, FragmentShader);
+	glAttachShader(ID, GeometryShader);
+	glLinkProgram(ID);
+
+	glDeleteShader(VertexShader);
+	glDeleteShader(FragmentShader);
+	glDeleteShader(GeometryShader);
+}
+
 void Shader::Activate()
 {
 	glUseProgram(ID);

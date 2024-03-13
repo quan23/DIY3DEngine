@@ -80,7 +80,6 @@ Coor Chunk::Pos2Coor(unsigned int pos) const
 
 void Chunk::updateFace()
 {
-	ChunkDoRender = false;
 	Calculating = true;
 	if (EmptyChunk)
 	{
@@ -168,6 +167,7 @@ Block* Chunk::getBlock(GLushort Pos) const
 void Chunk::pushToGPU()
 {
 	Calculating = true;
+	ChunkDoRender = false;
 	if (_VAO != nullptr) _VAO->Delete();
 	_VAO = new VAO;
 	_VBO = new VBO(&chunkVertex[0].Position, numVertex * sizeof(vertex));
