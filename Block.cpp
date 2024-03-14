@@ -50,11 +50,11 @@ void Block::getFace(Chunk& chunk, Coor coor) const
 		for (char face = faceID::TOP; face <= faceID::BOTTOM; face++)
 		{
 			//std::cout << coor << " " << (int)face << "\n";
-			if (chunk.getBlock(coor + Chunk::nearBlock[face]) == nullptr)
+			if (chunk.getBlock(coor + Chunk::nearBlock[face]) == nullptr || chunk.getBlock(coor + Chunk::nearBlock[face])->blockID == 0)
 			{
 				for (char i = 0; i < 4; i++)
 				{
-					chunk.chunkVertex.push_back(vertex(chunk.Coor2Pos(coor), int(face << 2) + i));
+					chunk.chunkVertex.push_back(vertex(Chunk::Coor2Pos(coor), int(face << 2) + i));
 					chunk.numVertex++;
 					Chunk::totalIndices++;
 				}
@@ -67,21 +67,22 @@ void Block::getFace(Chunk& chunk, Coor coor) const
 				chunk.numFace++;
 				//std::cout << -1;
 			}
-			else if (chunk.getBlock(coor + Chunk::nearBlock[face])->blockID == 0)
+		}
+	}
+}
+
+void Block::getVoxelFace(Chunk& chunk, Coor coor) const
+{
+	if (blockID != 0)
+	{
+		for (char face = faceID::TOP; face <= faceID::BOTTOM; face++)
+		{
+			//std::cout << coor << " " << (int)face << "\n";
+			if (chunk.getBlock(coor + Chunk::nearBlock[face]) == nullptr || chunk.getBlock(coor + Chunk::nearBlock[face])->blockID == 0)
 			{
-				for (char i = 0; i < 4; i++)
-				{
-					chunk.chunkVertex.push_back(vertex(chunk.Coor2Pos(coor), int(face << 2) + i));
-					chunk.numVertex++;
-					Chunk::totalIndices++;
-				}
-				chunk.chunkIndices.push_back(chunk.numFace * 4 + 0);
-				chunk.chunkIndices.push_back(chunk.numFace * 4 + 1);
-				chunk.chunkIndices.push_back(chunk.numFace * 4 + 2);
-				chunk.chunkIndices.push_back(chunk.numFace * 4 + 0);
-				chunk.chunkIndices.push_back(chunk.numFace * 4 + 2);
-				chunk.chunkIndices.push_back(chunk.numFace * 4 + 3);
+				chunk.chunkVoxel.push_back({ Chunk::Coor2Pos(coor),face });
 				chunk.numFace++;
+				//std::cout << -1;
 			}
 		}
 	}

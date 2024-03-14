@@ -32,16 +32,20 @@ class Chunk
 
 		std::vector <vertex> chunkVertex;
 		std::vector <GLushort> chunkIndices;
+		std::vector <std::pair<int, int> > chunkVoxel;
 
 		Chunk(int x, int y, int z, World* world);
 		~Chunk();
 
-		unsigned int Coor2Pos(Coor coor) const;
-		Coor Pos2Coor(unsigned int pos) const;
+		static unsigned int Coor2Pos(Coor coor);
+		static Coor Pos2Coor(unsigned int pos);
+
 		void updateFace();
 		void render(GLuint ShaderProgram) const;
+
 		Block* getBlock(Coor Coor) const;
 		Block* getBlock(GLushort Pos) const;
+
 		void pushToGPU();
 
 	private:

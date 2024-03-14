@@ -8,7 +8,6 @@ in vec3 fNor;
 //in int Data;
 
 uniform sampler2D tex0;
-uniform sampler2D tex1;
 uniform vec3 lDir;
 uniform vec3 lPos;
 uniform vec3 lCol;
