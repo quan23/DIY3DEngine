@@ -13,7 +13,7 @@ Coor Chunk::nearBlock[] =
 	Coor(0,-1,0),
 };
 
-int Chunk::totalIndices = 0;
+int Chunk::totalFace = 0;
 
 template <typename T>
 void cleanMem(std::vector<T>& vector)
@@ -61,7 +61,7 @@ Chunk::Chunk(int x, int y, int z, World* world)
 
 Chunk::~Chunk()
 {
-	totalIndices -= numVertex;
+	totalFace -= numFace;
 	delete[] blockList;
 	if (_VAO != nullptr)
 		_VAO->Delete();
@@ -86,7 +86,7 @@ void Chunk::updateFace()
 		return;
 	}
 	GLushort thisIndice[4];
-	totalIndices -= numVertex;
+	totalFace -= numFace;
 	numVertex = 0;
 	numFace = 0;
 	/*GLushort (*indicesID)(glm::vec3&) = [](glm::vec3& coor)
@@ -169,8 +169,9 @@ void Chunk::pushToGPU()
 {
 	Calculating = true;
 	ChunkDoRender = false;
-	/*if (_VAO != nullptr) _VAO->Delete();
-	_VAO = new VAO;
+
+	if (_VAO != nullptr) _VAO->Delete();
+	/*_VAO = new VAO;
 	_VBO = new VBO(&chunkVertex[0].Position, numVertex * sizeof(vertex));
 	_EBO = new EBO(&chunkIndices[0], numFace * 6 * sizeof(GLushort));
 	_VAO->LinkVBO(*_VBO, 0, 1, 2 * sizeof(int), 0);
@@ -180,6 +181,7 @@ void Chunk::pushToGPU()
 	_EBO->Delete();
 	cleanMem(chunkVertex);
 	cleanMem(chunkIndices);*/
+
 	if (_VAO != nullptr) _VAO->Delete();
 	_VAO = new VAO;
 	_VBO = new VBO(&chunkVoxel[0].first, numFace*2*sizeof(int));
@@ -188,6 +190,7 @@ void Chunk::pushToGPU()
 	_VBO->Delete();
 	_VAO->Unbind();
 	cleanMem(chunkVoxel);
+
 	ChunkDoRender = true;
 }
 

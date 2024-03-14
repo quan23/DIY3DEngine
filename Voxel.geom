@@ -3,7 +3,6 @@
 in VERT_OUT
 {
 	int sPos,data;
-	mat4 camera;
 } vert_in[];
 
 layout (points) in;
@@ -46,16 +45,33 @@ const float light[] = float[]
 	0.3f,
 	0.0f
 );
+const vec3 normal[] = vec3[]
+(
+	vec3(0.0f,1.0f,0.0f),
+	vec3(0.0f,0.0f,1.0f),
+	vec3(-1.0f,0.0f,0.0f),
+	vec3(0.0f,0.0f,-1.0f),
+	vec3(1.0f,1.0f,0.0f),
+	vec3(0.0f,-1.0f,0.0f)
+);
+
+uniform mat4 camera;
 
 out float lVal;
+out vec3 fPos;
+out vec2 tPos;
+out vec3 fNor;
 
 void main()
 {
 	vec3 pos=gl_in[0].gl_Position.xyz;
-	for (int i=vert_in[0].data*4;i<vert_in[0].data*4+4;i++)
+	for (int i=0;i<4;i++)
 	{
-		gl_Position = vert_in[0].camera*vec4(pos.xyz+vertex[indices[i]],1.0f);
+		fPos = pos.xyz+vertex[indices[vert_in[0].data*4+i]];
+		gl_Position = camera*vec4(fPos,1.0f);
+		tPos = texCoor[i];
 		lVal = light[vert_in[0].data];
+		fNor = normal[vert_in[0].data];
 		EmitVertex();
 	}
 	EndPrimitive();

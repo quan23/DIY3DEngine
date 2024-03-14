@@ -24,7 +24,7 @@ class Chunk
 		Block* blockList = new Block[CHUNK_SIZE];
 		worldCoor ChunkCoor;
 		bool ChunkDoRender = false, EmptyChunk = true, ShouldUpdate = false, Calculating = false, OutOfBound = false;
-		static int totalIndices;
+		static int totalFace;
 		GLushort numFace = 0;
 		GLushort numVertex = 0;
 

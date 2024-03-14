@@ -56,7 +56,6 @@ void Block::getFace(Chunk& chunk, Coor coor) const
 				{
 					chunk.chunkVertex.push_back(vertex(Chunk::Coor2Pos(coor), int(face << 2) + i));
 					chunk.numVertex++;
-					Chunk::totalIndices++;
 				}
 				chunk.chunkIndices.push_back(chunk.numFace * 4 + 0);
 				chunk.chunkIndices.push_back(chunk.numFace * 4 + 1);
@@ -65,6 +64,7 @@ void Block::getFace(Chunk& chunk, Coor coor) const
 				chunk.chunkIndices.push_back(chunk.numFace * 4 + 2);
 				chunk.chunkIndices.push_back(chunk.numFace * 4 + 3);
 				chunk.numFace++;
+				Chunk::totalFace++;
 				//std::cout << -1;
 			}
 		}
@@ -82,6 +82,7 @@ void Block::getVoxelFace(Chunk& chunk, Coor coor) const
 			{
 				chunk.chunkVoxel.push_back({ Chunk::Coor2Pos(coor),face });
 				chunk.numFace++;
+				Chunk::totalFace++;
 				//std::cout << -1;
 			}
 		}

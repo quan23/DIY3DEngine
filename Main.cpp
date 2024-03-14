@@ -36,19 +36,22 @@ int main()
 	Window window(sWidth, sHeight, "Main");
 	double tStart, tEnd;
 
-	//Shader ShaderProgram("default.vert", "default.frag");
-	Shader ShaderProgram("Voxel.vert", "default.frag", "Voxel.geom");
+	Shader ShaderProgram("default.vert", "default.frag");
+	//Shader ShaderProgram("Voxel.vert", "default.frag", "Voxel.geom");
 	stbi_set_flip_vertically_on_load(true);
 
 	camera Camera(sWidth, sHeight, glm::vec3(10.f));
 
+	
 	GLuint cameraID = glGetUniformLocation(ShaderProgram.ID, "camera");
+	checkerror();
 	GLuint cPosID = glGetUniformLocation(ShaderProgram.ID, "cPos");
+	checkerror();
 	Texture text0("Default/stone.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RED, GL_UNSIGNED_BYTE);
 	text0.linkTex(ShaderProgram, "tex0", 0);
+	checkerror();
 	//Texture text1("Default/grass_block_top.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RED, GL_UNSIGNED_BYTE);
 	//text1.linkTex(ShaderProgram, "tex0", 0);
-	checkerror();
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lPos"), 1, &vec3(10.0f, 10.0f, 10.0f)[0]);
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lDir"), 1, &normalize(vec3(-0.6f,1.0f,0.2f))[0]);
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lCol"), 1, &vec3(1.0f, 1.0f, 1.0f)[0]);
@@ -56,7 +59,8 @@ int main()
 	ShaderProgram.Activate();
 	glfwSetCursorPos(window.getWindow(), (double)sWidth / 2, (double)sHeight / 2);
 	tStart = glfwGetTime();
-	checkerror();
+
+	
 	text0.Bind();
 	mat4 rota = mat4(1.0f);
 	rota = rotate(rota, radians(0.1f), vec3(0.0f, 1.0f, 0.0f));
@@ -94,7 +98,7 @@ int main()
 
 		tStart = tEnd;
 	}
-	std::cout << Chunk::totalIndices;
+	std::cout << Chunk::totalFace;
 	world.endloading();
 	text0.Delete();
 	ShaderProgram.Delete();

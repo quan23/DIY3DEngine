@@ -6,7 +6,6 @@ layout (location = 1) in int data;
 out VERT_OUT
 {
 	int aPos,data;
-	mat4 camera;
 } vert_out;
 
 
@@ -18,7 +17,6 @@ uniform int chunkX;
 uniform int chunkY;
 uniform int chunkZ;
 
-uniform mat4 camera;
 uniform mat4 model;
 
 uniform int time;
@@ -39,5 +37,4 @@ void main()
 
 	vert_out.aPos=aPos;
 	vert_out.data=data;
-	vert_out.camera=camera;
 }
