@@ -8,7 +8,6 @@ out VERT_OUT
 	int aPos,data;
 } vert_out;
 
-
 uniform int CHUNK_WIDTH;
 uniform int CHUNK_LENGTH;
 uniform int CHUNK_HEIGHT;
@@ -16,11 +15,6 @@ uniform int CHUNK_HEIGHT;
 uniform int chunkX;
 uniform int chunkY;
 uniform int chunkZ;
-
-uniform mat4 model;
-
-uniform int time;
-
 
 void main()
 {

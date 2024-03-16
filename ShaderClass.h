@@ -17,8 +17,11 @@ class Shader
 		Shader(const char *VertexFile,const char *FragmentFile);
 		Shader(const char *VertexFile,const char *FragmentFile, const char *GeometryFile);
 
+		
+
 		void Activate();
 		void Delete();
 	private:
+		void compileErrors(unsigned int shader, const char* type);
 };
 #endif

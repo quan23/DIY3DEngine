@@ -48,20 +48,32 @@ void camera::cInput(GLFWwindow* window, double fram)
 	}
 	if (glm::length(Move)!=0) Position += glm::normalize(Move)*step;
 	WorldCoor = World::inWhatChunk(int(Position.x), int(Position.y), int(Position.z));
-	glfwSetInputMode(window, GLFW_CURSOR,GLFW_CURSOR_HIDDEN);
-	double mouseX, mouseY;
-	glfwGetCursorPos(window, &mouseX, &mouseY);
-	mouseX = Xsensitivity*(mouseX - (float)Width / 2);
-	mouseY = Ysensitivity*(mouseY - (float)Height / 2);
-	Yaw += mouseX;
-	Pitch += mouseY;
-	if (Pitch > 89.0f) Pitch = 89.0f;
-	if (Pitch <-89.0f) Pitch =-89.0f;
-	Orientation.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	Orientation.y =-sin(glm::radians(Pitch));
-	Orientation.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-	Orientation = glm::normalize(Orientation);
-	glfwSetCursorPos(window, (double)Width/2, (double)Height/2);
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+	{
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		if (firstClick)
+		{
+			glfwSetCursorPos(window, (double)Width / 2, (double)Height / 2);
+			firstClick = false;
+		}
+		double mouseX, mouseY;
+		glfwGetCursorPos(window, &mouseX, &mouseY);
+		mouseX = Xsensitivity * (mouseX - (float)Width / 2);
+		mouseY = Ysensitivity * (mouseY - (float)Height / 2);
+		Yaw -= mouseX;
+		Pitch -= mouseY;
+		if (Pitch > 89.0f) Pitch = 89.0f;
+		if (Pitch < -89.0f) Pitch = -89.0f;
+		Orientation.x = -sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+		Orientation.y = sin(glm::radians(Pitch));
+		Orientation.z = -cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+		Orientation = glm::normalize(Orientation);
+		glfwSetCursorPos(window, (double)Width / 2, (double)Height / 2);
+	}
+	else
+	{
+		firstClick = true;
+	}
 
 }
 

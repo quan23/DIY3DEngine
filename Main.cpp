@@ -36,8 +36,9 @@ int main()
 	Window window(sWidth, sHeight, "Main");
 	double tStart, tEnd;
 
-	Shader ShaderProgram("default.vert", "default.frag");
-	//Shader ShaderProgram("Voxel.vert", "default.frag", "Voxel.geom");
+	//Shader ShaderProgram("default.vert", "default.frag");
+	Shader ShaderProgram("Voxel.vert", "default.frag", "Voxel.geom");
+	//Shader ShaderProgram("Voxel.vert", "test.frag", "test.geom");
 	stbi_set_flip_vertically_on_load(true);
 
 	camera Camera(sWidth, sHeight, glm::vec3(10.f));
@@ -62,8 +63,7 @@ int main()
 
 	
 	text0.Bind();
-	mat4 rota = mat4(1.0f);
-	rota = rotate(rota, radians(0.1f), vec3(0.0f, 1.0f, 0.0f));
+
 	World world(ShaderProgram.ID);
 	world.updataRenderDist(5);
 	world.startLoading();
@@ -84,6 +84,7 @@ int main()
 
 		//world.loadWorld(Camera.getWorldCoor(), 5);
 		//world.reloadWorld();
+
 		world.updateWorldAnchor(Camera.getWorldCoor());
 		
 

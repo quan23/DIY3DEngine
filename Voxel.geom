@@ -1,12 +1,12 @@
 #version 330 core
 
-in VERT_OUT
-{
-	int sPos,data;
-} vert_in[];
-
 layout (points) in;
 layout (triangle_strip, max_vertices = 4) out;
+
+in VERT_OUT
+{
+	int aPos,data;
+} vert_in[];
 
 const vec3 vertex[] = vec3[]
 (
@@ -33,16 +33,16 @@ const vec2 texCoor[] = vec2[]
 (
 	vec2(0.0f,0.0f),
 	vec2(0.0f,1.0f),
-	vec2(1.0f,1.0f),
-	vec2(1.0f,0.0f)
+	vec2(1.0f,0.0f),
+	vec2(1.0f,1.0f)
 );
 const float light[] = float[]
 (
 	1.0f,
 	0.7f,
-	0.3f,
+	0.4f,
 	0.7f,
-	0.3f,
+	0.4f,
 	0.0f
 );
 const vec3 normal[] = vec3[]
@@ -55,12 +55,13 @@ const vec3 normal[] = vec3[]
 	vec3(0.0f,-1.0f,0.0f)
 );
 
-uniform mat4 camera;
 
 out float lVal;
 out vec3 fPos;
 out vec2 tPos;
 out vec3 fNor;
+
+uniform mat4 camera;
 
 void main()
 {
@@ -74,5 +75,7 @@ void main()
 		fNor = normal[vert_in[0].data];
 		EmitVertex();
 	}
+
+
 	EndPrimitive();
 }

@@ -27,6 +27,7 @@ class camera
 		float Speed = 10.0f, Xsensitivity = 0.5f, Ysensitivity = 0.5f;
 		float Yaw = 0.0f, Pitch = 0.0f;
 		worldCoor WorldCoor;
+		bool firstClick = true;
 };
 
 #endif

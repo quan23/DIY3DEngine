@@ -106,7 +106,7 @@ void Chunk::updateFace()
 	//std::cout << "-1";
 	//std::cout << numFace << " " << chunkIndices.size();
 	//std::cout << chunkIndices.size() << "\n";
-	if (chunkIndices.size() == 0)
+	if (numFace == 0)
 	{
 		ChunkDoRender = false;
 		return;
@@ -129,7 +129,7 @@ void Chunk::render(GLuint ShaderProgram) const
 		glUniform1i(glGetUniformLocation(ShaderProgram, "chunkX"), ChunkCoor.x);
 		glUniform1i(glGetUniformLocation(ShaderProgram, "chunkY"), ChunkCoor.y);
 		glUniform1i(glGetUniformLocation(ShaderProgram, "chunkZ"), ChunkCoor.z);
-		//glDrawElements(GL_TRIANGLES, numFace * 6, GL_UNSIGNED_SHORT, 0);
+		//glDrawElements(GL_POINTS, numFace, GL_UNSIGNED_SHORT, 0);
 		glDrawArrays(GL_POINTS, 0, numFace);
 		_VAO->Unbind();
 	}
@@ -170,9 +170,9 @@ void Chunk::pushToGPU()
 	Calculating = true;
 	ChunkDoRender = false;
 
-	if (_VAO != nullptr) _VAO->Delete();
-	/*_VAO = new VAO;
-	_VBO = new VBO(&chunkVertex[0].Position, numVertex * sizeof(vertex));
+	/*if (_VAO != nullptr) _VAO->Delete();
+	_VAO = new VAO;
+	_VBO = new VBO(&chunkVertex[0].Position, numFace * 4 * sizeof(vertex));
 	_EBO = new EBO(&chunkIndices[0], numFace * 6 * sizeof(GLushort));
 	_VAO->LinkVBO(*_VBO, 0, 1, 2 * sizeof(int), 0);
 	_VAO->LinkVBO(*_VBO, 1, 1, 2 * sizeof(int), sizeof(int));
@@ -184,11 +184,11 @@ void Chunk::pushToGPU()
 
 	if (_VAO != nullptr) _VAO->Delete();
 	_VAO = new VAO;
-	_VBO = new VBO(&chunkVoxel[0].first, numFace*2*sizeof(int));
+	_VBO = new VBO(&chunkVoxel[0].Position, numFace*sizeof(vertex));
 	_VAO->LinkVBO(*_VBO, 0, 1, 2 * sizeof(int), 0);
 	_VAO->LinkVBO(*_VBO, 1, 1, 2 * sizeof(int), sizeof(int));
-	_VBO->Delete();
 	_VAO->Unbind();
+	_VBO->Delete();
 	cleanMem(chunkVoxel);
 
 	ChunkDoRender = true;

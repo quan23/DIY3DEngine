@@ -32,7 +32,7 @@ class Chunk
 
 		std::vector <vertex> chunkVertex;
 		std::vector <GLushort> chunkIndices;
-		std::vector <std::pair<int, int> > chunkVoxel;
+		std::vector <vertex> chunkVoxel;
 
 		Chunk(int x, int y, int z, World* world);
 		~Chunk();
