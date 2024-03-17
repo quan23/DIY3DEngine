@@ -34,6 +34,12 @@ struct vertex
 	vertex() = default;
 	vertex(int Position, int data);
 };
+struct pixel
+{
+	unsigned char r = 0, g = 0, b = 0, a = 0;
+	pixel() = default;
+	pixel(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+};
 
 std::ostream& operator<<(std::ostream& stream, const Coor& coor);
 std::ostream& operator<<(std::ostream& stream, const worldCoor& coor);

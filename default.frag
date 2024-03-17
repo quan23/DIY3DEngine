@@ -53,6 +53,6 @@ void main()
     tCol = texture(tex0, tPos);
     //fSpe = texture(tex1, tPos);
     //vec3 tCol = fCol;
-    FragColor = vec4(vec3(tCol.x*lVal),1.0f);
+    FragColor = vec4(vec3(tCol.xyz*lVal),1.0f);
     //FragColor = tCol*(SkyLight()+PointLight(vec3(10.0f)));
 }

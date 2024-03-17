@@ -66,13 +66,16 @@ uniform mat4 camera;
 void main()
 {
 	vec3 pos=gl_in[0].gl_Position.xyz;
+	int face = vert_in[0].data%6;
+	int textID = vert_in[0].data/6;
 	for (int i=0;i<4;i++)
 	{
-		fPos = pos.xyz+vertex[indices[vert_in[0].data*4+i]];
+		fPos = pos.xyz+vertex[indices[face*4+i]];
 		gl_Position = camera*vec4(fPos,1.0f);
-		tPos = texCoor[i];
-		lVal = light[vert_in[0].data];
-		fNor = normal[vert_in[0].data];
+		tPos = (vec2(textID%64,textID/64)+texCoor[i])/64.0f;
+		//tPos = texCoor[i];
+		lVal = light[face];
+		fNor = normal[face];
 		EmitVertex();
 	}
 

@@ -70,3 +70,8 @@ face::face(glm::vec3 v0, glm::vec3 v1, glm::vec3 v2, glm::vec3 v3)
 vertex::vertex(int Position, int data) : Position(Position), data(data)
 {
 }
+
+pixel::pixel(unsigned char r, unsigned char g, unsigned char b, unsigned char a) : r(r), g(g), b(b), a(a)
+{
+
+}

@@ -12,7 +12,7 @@ class Texture
 		GLenum type;
 		GLenum slot;
 
-		Texture(const char* iName, GLenum iType, GLenum slot, GLenum format, GLenum bytetype);
+		Texture(const char* Name, GLenum Type, GLenum slot, GLenum format, GLenum bytetype);
 		void linkTex(Shader& shader, const char* texID, GLint unit);
 		void Bind();
 		void Unbind();

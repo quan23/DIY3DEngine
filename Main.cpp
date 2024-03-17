@@ -8,6 +8,7 @@
 #include "Window.h"
 #include "ShaderClass.h"
 #include "Texture.h"
+#include "TextureAtlas.h"
 #include "Camera.h"
 #include "VAO.h"
 #include "VBO.h"
@@ -45,24 +46,26 @@ int main()
 
 	
 	GLuint cameraID = glGetUniformLocation(ShaderProgram.ID, "camera");
-	checkerror();
+
 	GLuint cPosID = glGetUniformLocation(ShaderProgram.ID, "cPos");
-	checkerror();
-	Texture text0("Default/stone.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RED, GL_UNSIGNED_BYTE);
-	text0.linkTex(ShaderProgram, "tex0", 0);
-	checkerror();
+
+	//Texture text0("Default/stone.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RED, GL_UNSIGNED_BYTE);
+	//text0.linkTex(ShaderProgram, "tex0", 0);
+	TextureAtlas atlas("Default", GL_TEXTURE0, GL_UNSIGNED_BYTE, 16);
+	atlas.linkTex(ShaderProgram, "tex0", 0);
+
 	//Texture text1("Default/grass_block_top.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RED, GL_UNSIGNED_BYTE);
 	//text1.linkTex(ShaderProgram, "tex0", 0);
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lPos"), 1, &vec3(10.0f, 10.0f, 10.0f)[0]);
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lDir"), 1, &normalize(vec3(-0.6f,1.0f,0.2f))[0]);
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lCol"), 1, &vec3(1.0f, 1.0f, 1.0f)[0]);
-	checkerror();
+
 	ShaderProgram.Activate();
 	glfwSetCursorPos(window.getWindow(), (double)sWidth / 2, (double)sHeight / 2);
 	tStart = glfwGetTime();
 
 	
-	text0.Bind();
+	atlas.Bind();
 
 	World world(ShaderProgram.ID);
 	world.updataRenderDist(5);
@@ -70,13 +73,11 @@ int main()
 	world.updateWorldAnchor(worldCoor(0,0,0));
 
 	Camera.setSpeed(10.0f);
-	int iTime = 0;
+
 	checkerror();
 	while (!window.shouldClose() && !(glfwGetKey(window.getWindow(), GLFW_KEY_BACKSPACE) == GLFW_PRESS))
 	{
 		tEnd = glfwGetTime();
-
-		glUniform1i(glGetUniformLocation(ShaderProgram.ID, "time"), ++iTime);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -101,7 +102,7 @@ int main()
 	}
 	std::cout << Chunk::totalFace;
 	world.endloading();
-	text0.Delete();
+	atlas.Delete();
 	ShaderProgram.Delete();
 	return 0;
 }

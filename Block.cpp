@@ -80,7 +80,7 @@ void Block::getVoxelFace(Chunk& chunk, Coor coor) const
 			//std::cout << coor << " " << (int)face << "\n";
 			if (chunk.getBlock(coor + Chunk::nearBlock[face]) == nullptr || chunk.getBlock(coor + Chunk::nearBlock[face])->blockID == 0)
 			{
-				chunk.chunkVoxel.push_back(vertex(Chunk::Coor2Pos(coor),int(face) ));
+				chunk.chunkVoxel.push_back(vertex(Chunk::Coor2Pos(coor),int(face)+6*blockID-6));
 				//chunk.chunkIndices.push_back(chunk.numFace);
 				chunk.numFace++;
 				Chunk::totalFace++;

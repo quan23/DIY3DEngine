@@ -45,8 +45,15 @@ Chunk::Chunk(int x, int y, int z, World* world)
 				if (realY < high)
 				{
 					EmptyChunk = false;
-					getBlock(Coor(x, y, z))->blockID = 1;
+					if (realY < 0)
+						getBlock(Coor(x, y, z))->blockID = 5;
+					else getBlock(Coor(x, y, z))->blockID = 1;
 				}
+				/*else if (realY < 0)
+				{
+					EmptyChunk = false;
+					getBlock(Coor(x, y, z))->blockID = 1;
+				}*/
 				//else getBlock(Coor(x, y, z))->blockID = 0;
 			}
 		}
