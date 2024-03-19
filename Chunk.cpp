@@ -1,7 +1,6 @@
 #include "World.h"
 #include "Block.h"
 #include "Chunk.h"
-#include <xhash>
 
 Coor Chunk::nearBlock[] =
 {
@@ -28,26 +27,27 @@ Chunk::Chunk(int x, int y, int z, World* world)
 	Calculating = true;
 	ChunkCoor = worldCoor(x, y, z);
 	this->world = world;
-	srand((ChunkCoor.x<<4)+ChunkCoor.z);
-	float multi = float(rand() % 100) / 20.0;
+	//srand((ChunkCoor.x<<4)+ChunkCoor.z);
+	//float multi = float(rand() % 100) / 20.0;
 	for (char x = 0; x < CHUNK_WIDTH; x++)
 	{
 		int realX = x + CHUNK_WIDTH * ChunkCoor.x;
 		for (char z = 0; z < CHUNK_LENGTH; z++)
 		{
 			int realZ = z + CHUNK_LENGTH * ChunkCoor.z;
-			int high = multi*(glm::sin(glm::degrees(float(realX))) + glm::cos(glm::degrees(float(realZ))));
+			//int high = multi*(glm::sin(glm::degrees(float(realX))) + glm::cos(glm::degrees(float(realZ))));
 			int shigh = (glm::sin(float(realX)) + glm::cos(float(realZ)));
 
 			for (char y = 0; y < CHUNK_HEIGHT; y++)
 			{
 				int realY = y + CHUNK_HEIGHT * ChunkCoor.y;
-				if (realY < high)
+				if (realY < shigh)
 				{
 					EmptyChunk = false;
-					if (realY < 0)
+					getBlock(Coor(x, y, z))->blockID = rand() % 5 + 1;
+					/*if (realY < 0)
 						getBlock(Coor(x, y, z))->blockID = 5;
-					else getBlock(Coor(x, y, z))->blockID = 1;
+					else getBlock(Coor(x, y, z))->blockID = 1;*/
 				}
 				/*else if (realY < 0)
 				{
@@ -55,6 +55,11 @@ Chunk::Chunk(int x, int y, int z, World* world)
 					getBlock(Coor(x, y, z))->blockID = 1;
 				}*/
 				//else getBlock(Coor(x, y, z))->blockID = 0;
+				/*if (((realX ^ realY) ^ realZ) & 1  && realY<0)
+				{
+					EmptyChunk = false;
+					getBlock(Coor(x, y, z))->blockID = 1;
+				}*/
 			}
 		}
 	}
@@ -72,7 +77,6 @@ Chunk::~Chunk()
 	delete[] blockList;
 	if (_VAO != nullptr)
 		_VAO->Delete();
-
 }
 
 unsigned int Chunk::Coor2Pos(Coor coor)
@@ -157,7 +161,6 @@ Block* Chunk::getBlock(Coor coor) const
 		if (world->worldMap[World::ChunkPos(wCoor)] == NULL)
 		{
 			return nullptr;
-			
 		}
 		return (world->worldMap[World::ChunkPos(wCoor)]->getBlock(coor));
 	}
