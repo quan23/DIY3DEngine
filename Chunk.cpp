@@ -144,6 +144,7 @@ void Chunk::render(GLuint ShaderProgram) const
 
 Block* Chunk::getBlock(Coor coor) const
 {
+	if (this == nullptr) return nullptr;
 	if (EmptyChunk) return nullptr;
 	if ((coor.x < 0) || (coor.x >= CHUNK_WIDTH) || (coor.y < 0) || (coor.y >= CHUNK_HEIGHT) || (coor.z < 0) || (coor.z >= CHUNK_LENGTH))
 	{
@@ -156,6 +157,7 @@ Block* Chunk::getBlock(Coor coor) const
 		coor.z = (coor.z + CHUNK_LENGTH) % CHUNK_LENGTH;
 		if (world->worldMap[World::ChunkPos(wCoor)] == NULL)
 		{
+			//std::cout << -1;
 			return nullptr;
 		}
 		return (world->worldMap[World::ChunkPos(wCoor)]->getBlock(coor));

@@ -4,8 +4,6 @@
 
 namespace fs = std::filesystem;
 
-
-
 TextureAtlas::TextureAtlas(const char* Path, GLenum slot, GLenum bytetype,const int textSize)
 {
 	int Width = textSize * atlasSize, Height = textSize * atlasSize, textureID = 0;

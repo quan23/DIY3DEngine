@@ -1,6 +1,5 @@
 #include <iostream>
 #include <stb/stb_image.h>
-#include <stb/stb_image_write.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <thread>
@@ -36,20 +35,23 @@ static float min(float x, float y)
 
 static Block* hitBlock(World& world, camera& camera, float maxLength)
 {
+	int maxCal = 1000;
 	glm::vec3 target = camera.getCoor(), rayDire = camera.Orientation;
+	if (world.getChunk(worldCoor(0, 0, 0)) == nullptr) return nullptr;
 	Block* block = (world.getChunk(worldCoor(0, 0, 0)))->getBlock(Coor((int)target.x + ((target.x < 0) ? -1 : 0), (int)target.y + ((target.y < 0) ? -1 : 0), (int)target.z + ((target.z < 0) ? -1 : 0)));
 	if (block == nullptr) return nullptr;
+	//std::cout << rayDire.x << " " << rayDire.y << " " << rayDire.z << "\n";
 	while (maxLength > 0.0f && block->blockID == 0)
 	{
-		float Xdire = abs((target.x > 0.0f) ? ((int)target.x - target.x + ((rayDire.x < 0.0f) ? 0 : 1)) : (target.x - (int)target.x + ((rayDire.x < 0.0f) ? 0 : 1)));
-		float Ydire = abs((target.y > 0.0f) ? ((int)target.y - target.y + ((rayDire.y < 0.0f) ? 0 : 1)) : (target.y - (int)target.y + ((rayDire.y < 0.0f) ? 0 : 1)));
-		float Zdire = abs((target.z > 0.0f) ? ((int)target.z - target.z + ((rayDire.z < 0.0f) ? 0 : 1)) : (target.z - (int)target.z + ((rayDire.z < 0.0f) ? 0 : 1)));
+		float Xdire = abs((target.x > 0.0f) ? ((int)target.x - target.x + ((rayDire.x > 0.0f) ? 0 : 1)) : (target.x - (int)target.x + ((rayDire.x > 0.0f) ? 0 : 1)));
+		float Ydire = abs((target.y > 0.0f) ? ((int)target.y - target.y + ((rayDire.y > 0.0f) ? 0 : 1)) : (target.y - (int)target.y + ((rayDire.y > 0.0f) ? 0 : 1)));
+		float Zdire = abs((target.z > 0.0f) ? ((int)target.z - target.z + ((rayDire.z > 0.0f) ? 0 : 1)) : (target.z - (int)target.z + ((rayDire.z > 0.0f) ? 0 : 1)));
 		if (rayDire.x != 0.0f) Xdire /= abs(rayDire.x);
-		else Xdire = 9999;
+		else Xdire = 999.0f;
 		if (rayDire.y != 0.0f) Ydire /= abs(rayDire.y);
-		else Ydire = 9999;
+		else Ydire = 999.0f;
 		if (rayDire.z != 0.0f) Zdire /= abs(rayDire.z);
-		else Zdire = 9999;
+		else Zdire = 999.0f;
 		if (Xdire < min(Ydire, Zdire))
 		{
 			target += rayDire * Xdire;
@@ -60,13 +62,20 @@ static Block* hitBlock(World& world, camera& camera, float maxLength)
 			target += rayDire * Ydire;
 			maxLength -= Ydire;
 		}
-		else if (Zdire < min(Ydire, Xdire))
+		else
 		{
 			target += rayDire * Zdire;
 			maxLength -= Zdire;
 		}
+		//std::cout << maxLength << "\n";
+		if (maxLength < 0.0f) return nullptr;
 		block = (world.getChunk(worldCoor(0, 0, 0)))->getBlock(Coor((int)target.x + ((target.x < 0) ? -1 : 0), (int)target.y + ((target.y < 0) ? -1 : 0), (int)target.z + ((target.z < 0) ? -1 : 0)));
 		if (block == nullptr) return nullptr;
+		if (maxCal-- < 0)
+		{
+			return nullptr;
+			std::cout << "skull\n";
+		}
 	}
 	if (maxLength > 0.0f) return block;
 	else return nullptr;
@@ -136,8 +145,8 @@ int main()
 
 		world.renderWorld();
 
-		//Block* block = hitBlock(world, Camera, 6.0f);
-		//if (block != nullptr) std::cout << block->blockID << " ";
+		Block* block = hitBlock(world, Camera, 6.0f);
+		if (block != nullptr) std::cout << (int)block->blockID << " ";
 
 
 		Camera.cInput(window.getWindow(), tEnd - tStart);
