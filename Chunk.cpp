@@ -35,7 +35,7 @@ Chunk::Chunk(int x, int y, int z, World* world)
 		for (char z = 0; z < CHUNK_LENGTH; z++)
 		{
 			int realZ = z + CHUNK_LENGTH * ChunkCoor.z;
-			int high = multi*(glm::sin(glm::degrees(float(realX))) + glm::cos(glm::degrees(float(realZ))));
+			int high = (glm::sin(glm::degrees(float(realX))) + glm::cos(glm::degrees(float(realZ))));
 			int shigh = (glm::sin(float(realX)) + glm::cos(float(realZ)));
 
 			//int shigh = (glm::sin(float(realX)) + glm::cos(float(realZ)));

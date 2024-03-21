@@ -136,8 +136,8 @@ int main()
 
 		world.renderWorld();
 
-		Block* block = hitBlock(world, Camera, 6.0f);
-		if (block != nullptr) std::cout << block->blockID << " ";
+		//Block* block = hitBlock(world, Camera, 6.0f);
+		//if (block != nullptr) std::cout << block->blockID << " ";
 
 
 		Camera.cInput(window.getWindow(), tEnd - tStart);
