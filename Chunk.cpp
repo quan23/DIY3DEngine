@@ -35,19 +35,20 @@ Chunk::Chunk(int x, int y, int z, World* world)
 		for (char z = 0; z < CHUNK_LENGTH; z++)
 		{
 			int realZ = z + CHUNK_LENGTH * ChunkCoor.z;
-			//int high = multi*(glm::sin(glm::degrees(float(realX))) + glm::cos(glm::degrees(float(realZ))));
+			int high = multi*(glm::sin(glm::degrees(float(realX))) + glm::cos(glm::degrees(float(realZ))));
 			int shigh = (glm::sin(float(realX)) + glm::cos(float(realZ)));
+
+			//int shigh = (glm::sin(float(realX)) + glm::cos(float(realZ)));
 
 			for (char y = 0; y < CHUNK_HEIGHT; y++)
 			{
 				int realY = y + CHUNK_HEIGHT * ChunkCoor.y;
-				if (realY < shigh)
+				if (realY < high)
 				{
 					EmptyChunk = false;
-					getBlock(Coor(x, y, z))->blockID = rand() % 5 + 1;
-					/*if (realY < 0)
+					if (realY < 0)
 						getBlock(Coor(x, y, z))->blockID = 5;
-					else getBlock(Coor(x, y, z))->blockID = 1;*/
+					else getBlock(Coor(x, y, z))->blockID = 1;
 				}
 				/*else if (realY < 0)
 				{
@@ -55,11 +56,6 @@ Chunk::Chunk(int x, int y, int z, World* world)
 					getBlock(Coor(x, y, z))->blockID = 1;
 				}*/
 				//else getBlock(Coor(x, y, z))->blockID = 0;
-				/*if (((realX ^ realY) ^ realZ) & 1  && realY<0)
-				{
-					EmptyChunk = false;
-					getBlock(Coor(x, y, z))->blockID = 1;
-				}*/
 			}
 		}
 	}
@@ -140,7 +136,7 @@ void Chunk::render(GLuint ShaderProgram) const
 		glUniform1i(glGetUniformLocation(ShaderProgram, "chunkX"), ChunkCoor.x);
 		glUniform1i(glGetUniformLocation(ShaderProgram, "chunkY"), ChunkCoor.y);
 		glUniform1i(glGetUniformLocation(ShaderProgram, "chunkZ"), ChunkCoor.z);
-		//glDrawElements(GL_POINTS, numFace, GL_UNSIGNED_SHORT, 0);
+		//glDrawElements(GL_TRIANGLES, numFace * 6, GL_UNSIGNED_SHORT, 0);
 		glDrawArrays(GL_POINTS, 0, numFace);
 		_VAO->Unbind();
 	}

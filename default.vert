@@ -57,7 +57,7 @@ void main()
 	//tPos = tCor;
 	//fCol = (aNor + vec3(1.0f))/2.0f;
 	//tPos = (texCoor[data%4]+vec2(0.001f*time,0.0f));
-	tPos = texCoor[data%4];
+	tPos = (vec2(4,0)+texCoor[data%4])/64.0f;
 
 	ivec3 ver;
 	int Pos = aPos;

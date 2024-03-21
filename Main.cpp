@@ -121,7 +121,7 @@ int main()
 	atlas.Bind();
 
 	World world(ShaderProgram.ID);
-	world.updataRenderDist(5);
+	world.updataRenderDist(1);
 	world.startLoading();
 	world.updateWorldAnchor(worldCoor(0,0,0));
 
@@ -139,7 +139,7 @@ int main()
 		//world.loadWorld(Camera.getWorldCoor(), 5);
 		//world.reloadWorld();
 
-		world.updateWorldAnchor(Camera.getWorldCoor());
+		//world.updateWorldAnchor(Camera.getWorldCoor());
 		
 		world.pushAllChunk();
 
