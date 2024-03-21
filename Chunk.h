@@ -1,7 +1,7 @@
 #ifndef CHUNK_CLASS_H
 #define CHUNK_CLASS_H
 
-constexpr signed char CHUNK_WIDTH = 16;
+constexpr signed char CHUNK_WIDTH =  16;
 constexpr signed char CHUNK_LENGTH = 16;
 constexpr signed char CHUNK_HEIGHT = 16;
 constexpr unsigned int CHUNK_SIZE = CHUNK_WIDTH*CHUNK_LENGTH*CHUNK_HEIGHT;

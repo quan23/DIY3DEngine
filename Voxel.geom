@@ -43,7 +43,7 @@ const float light[] = float[]
 	0.4f,
 	0.7f,
 	0.4f,
-	0.0f
+	0.2f
 );
 const vec3 normal[] = vec3[]
 (
