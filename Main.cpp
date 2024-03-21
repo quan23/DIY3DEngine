@@ -33,13 +33,13 @@ static float min(float x, float y)
 	else return x;
 }
 
-static Block* hitBlock(World& world, camera& camera, float maxLength)
+static std::pair<Chunk*,Block*> hitBlock(World& world, camera& camera, float maxLength)
 {
 	int maxCal = 1000;
 	glm::vec3 target = camera.getCoor(), rayDire = camera.Orientation;
-	if (world.getChunk(worldCoor(0, 0, 0)) == nullptr) return nullptr;
+	if (world.getChunk(worldCoor(0, 0, 0)) == nullptr) return { nullptr,nullptr };
 	Block* block = (world.getChunk(worldCoor(0, 0, 0)))->getBlock(Coor((int)target.x + ((target.x < 0) ? -1 : 0), (int)target.y + ((target.y < 0) ? -1 : 0), (int)target.z + ((target.z < 0) ? -1 : 0)));
-	if (block == nullptr) return nullptr;
+	if (block == nullptr) return { nullptr,nullptr };
 	//std::cout << rayDire.x << " " << rayDire.y << " " << rayDire.z << "\n";
 	while (maxLength > 0.0f && block->blockID == 0)
 	{
@@ -68,17 +68,17 @@ static Block* hitBlock(World& world, camera& camera, float maxLength)
 			maxLength -= Zdire;
 		}
 		//std::cout << maxLength << "\n";
-		if (maxLength < 0.0f) return nullptr;
+		if (maxLength < 0.0f) return { nullptr,nullptr };
 		block = (world.getChunk(worldCoor(0, 0, 0)))->getBlock(Coor((int)target.x + ((target.x < 0) ? -1 : 0), (int)target.y + ((target.y < 0) ? -1 : 0), (int)target.z + ((target.z < 0) ? -1 : 0)));
-		if (block == nullptr) return nullptr;
+		if (block == nullptr) return { nullptr,nullptr };
 		if (maxCal-- < 0)
 		{
-			return nullptr;
+			return { nullptr,nullptr };
 			std::cout << "skull\n";
 		}
 	}
-	if (maxLength > 0.0f) return block;
-	else return nullptr;
+	if (maxLength > 0.0f) return {world.getChunk(world.inWhatChunk(Coor((int)target.x,(int)target.y,(int)target.z))), block };
+	else return { nullptr,nullptr };
 }
 
 int main()
@@ -139,14 +139,24 @@ int main()
 		//world.loadWorld(Camera.getWorldCoor(), 5);
 		//world.reloadWorld();
 
-		//world.updateWorldAnchor(Camera.getWorldCoor());
+		world.updateWorldAnchor(Camera.getWorldCoor());
 		
 		world.pushAllChunk();
 
 		world.renderWorld();
 
-		Block* block = hitBlock(world, Camera, 6.0f);
-		if (block != nullptr) std::cout << (int)block->blockID << " ";
+		std::pair<Chunk*, Block*> block = hitBlock(world, Camera, 6.0f);
+		if (block.second != nullptr)
+		{
+			std::cout << (int)block.second->blockID << " ";
+			if (glfwGetMouseButton(window.getWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
+			{
+				block.second->blockID = 0;
+				block.first->ShouldUpdate = true;
+			}
+		}
+
+		
 
 
 		Camera.cInput(window.getWindow(), tEnd - tStart);
