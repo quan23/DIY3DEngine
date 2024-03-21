@@ -17,7 +17,7 @@
 #include "DataType.h"
 #include "World.h"
 
-void checkerror()
+static void checkerror()
 {
 	GLenum error=glGetError();
 	while (error)
@@ -28,11 +28,55 @@ void checkerror()
 	std::cout << "\n";
 }
 
+static float min(float x, float y)
+{
+	if (x > y) return y;
+	else return x;
+}
+
+static Block* hitBlock(World& world, camera& camera, float maxLength)
+{
+	glm::vec3 target = camera.getCoor(), rayDire = camera.Orientation;
+	Block* block = (world.getChunk(worldCoor(0, 0, 0)))->getBlock(Coor((int)target.x + ((target.x < 0) ? -1 : 0), (int)target.y + ((target.y < 0) ? -1 : 0), (int)target.z + ((target.z < 0) ? -1 : 0)));
+	if (block == nullptr) return nullptr;
+	while (maxLength > 0.0f && block->blockID == 0)
+	{
+		float Xdire = abs((target.x > 0.0f) ? ((int)target.x - target.x + ((rayDire.x < 0.0f) ? 0 : 1)) : (target.x - (int)target.x + ((rayDire.x < 0.0f) ? 0 : 1)));
+		float Ydire = abs((target.y > 0.0f) ? ((int)target.y - target.y + ((rayDire.y < 0.0f) ? 0 : 1)) : (target.y - (int)target.y + ((rayDire.y < 0.0f) ? 0 : 1)));
+		float Zdire = abs((target.z > 0.0f) ? ((int)target.z - target.z + ((rayDire.z < 0.0f) ? 0 : 1)) : (target.z - (int)target.z + ((rayDire.z < 0.0f) ? 0 : 1)));
+		if (rayDire.x != 0.0f) Xdire /= abs(rayDire.x);
+		else Xdire = 9999;
+		if (rayDire.y != 0.0f) Ydire /= abs(rayDire.y);
+		else Ydire = 9999;
+		if (rayDire.z != 0.0f) Zdire /= abs(rayDire.z);
+		else Zdire = 9999;
+		if (Xdire < min(Ydire, Zdire))
+		{
+			target += rayDire * Xdire;
+			maxLength -= Xdire;
+		}
+		else if (Ydire < min(Xdire, Zdire))
+		{
+			target += rayDire * Ydire;
+			maxLength -= Ydire;
+		}
+		else if (Zdire < min(Ydire, Xdire))
+		{
+			target += rayDire * Zdire;
+			maxLength -= Zdire;
+		}
+		block = (world.getChunk(worldCoor(0, 0, 0)))->getBlock(Coor((int)target.x + ((target.x < 0) ? -1 : 0), (int)target.y + ((target.y < 0) ? -1 : 0), (int)target.z + ((target.z < 0) ? -1 : 0)));
+		if (block == nullptr) return nullptr;
+	}
+	if (maxLength > 0.0f) return block;
+	else return nullptr;
+}
+
 int main()
 {
 	using namespace std;
 	using namespace glm;
-	int sWidth = 1780, sHeight = 1020;
+	int sWidth = 1080, sHeight = 720;
 	
 	Window window(sWidth, sHeight, "Main");
 	double tStart, tEnd;
@@ -56,7 +100,7 @@ int main()
 
 	//Texture text1("Default/grass_block_top.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RED, GL_UNSIGNED_BYTE);
 	//text1.linkTex(ShaderProgram, "tex0", 0);
-	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lPos"), 1, &vec3(10.0f, 10.0f, 10.0f)[0]);
+	//glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lPos"), 1, &vec3(10.0f, 10.0f, 10.0f)[0]);
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lDir"), 1, &normalize(vec3(-0.6f,1.0f,0.2f))[0]);
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lCol"), 1, &vec3(1.0f, 1.0f, 1.0f)[0]);
 
@@ -88,10 +132,13 @@ int main()
 
 		//world.updateWorldAnchor(Camera.getWorldCoor());
 		
+		world.pushAllChunk();
 
 		world.renderWorld();
 
-		world.pushAllChunk();
+		Block* block = hitBlock(world, Camera, 6.0f);
+		if (block != nullptr) std::cout << block->blockID << " ";
+
 
 		Camera.cInput(window.getWindow(), tEnd - tStart);
 		glUniform3fv(cPosID, 1, &Camera.getCoor()[0]);

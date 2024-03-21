@@ -18,9 +18,10 @@ class camera
 		void cInput(GLFWwindow* window, double fram);
 		void setSpeed(float speed);
 		glm::vec3 getCoor() const;
+		glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, -1.0f);
 	private:
 		glm::vec3 Position;
-		glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, -1.0f);
+		
 		glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
 		glm::vec3 Move = glm::vec3(0.0f);
 		int Width, Height;

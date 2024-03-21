@@ -73,6 +73,7 @@ void camera::cInput(GLFWwindow* window, double fram)
 	else
 	{
 		firstClick = true;
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
 }
