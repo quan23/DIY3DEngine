@@ -14,17 +14,7 @@ void VAO::LinkVBO(VBO& VBO, GLuint Layout, GLuint size, GLuint stride, GLuint st
 	VBO.Unbind();
 }
 
-void VAO::Bind()
-{
-	glBindVertexArray(ID);
-}
-
-void VAO::Unbind()
-{
-	glBindVertexArray(0);
-}
-
-void VAO::Delete()
+void VAO::Delete() const
 {
 	Unbind();
 	glDeleteVertexArrays(1, &ID);

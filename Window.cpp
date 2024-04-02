@@ -18,6 +18,15 @@ Window::~Window()
 	glfwTerminate();
 }
 
+Window* Window::currentWindow;
+
+void Window::windowSizeCallBack(GLFWwindow* Window, int Width, int Height)
+{
+	currentWindow->Width = Width;
+	currentWindow->Height = Height;
+	glViewport(0, 0, currentWindow->Width, currentWindow->Height);
+}
+
 bool Window::init()
 {
 	if (!glfwInit())
@@ -37,7 +46,8 @@ bool Window::init()
 	}
 	glfwMakeContextCurrent(ID);
 	gladLoadGL();
-	glViewport(0, 0, Width, Height);
+	currentWindow = this;
+	glfwSetWindowSizeCallback(ID, Window::windowSizeCallBack);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -53,12 +63,3 @@ void Window::update() const
 	glfwPollEvents();
 }
 
-bool Window::shouldClose() const
-{
-	return glfwWindowShouldClose(ID);
-}
-
-GLFWwindow* Window::getWindow() const
-{
-	return ID;
-}

@@ -199,7 +199,7 @@ void World::loadingLoop()
 	{
 		loadWorld(worldAnchor, renderDist);
 		reloadWorld();
-		std::this_thread::sleep_for(std::chrono::microseconds(100));
+		//std::this_thread::sleep_for(std::chrono::microseconds(100));
 	}
 }
 

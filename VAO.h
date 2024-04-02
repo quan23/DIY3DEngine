@@ -11,9 +11,9 @@ class VAO
 		VAO();
 
 		void LinkVBO(VBO& VBO, GLuint Layout, GLuint size, GLuint stride, GLuint start);
-		void Bind();
-		void Unbind();
-		void Delete();
+		inline void Bind() const { glBindVertexArray(ID); }
+		inline void Unbind() const { glBindVertexArray(0); }
+		void Delete() const;
 };
 
 #endif

@@ -33,7 +33,7 @@ static float min(float x, float y)
 	else return x;
 }
 
-static std::pair<Chunk*,Block*> hitBlock(World& world, camera& camera, float maxLength)
+static std::pair<Chunk*,Block*> hitBlock(World& world, Camera& camera, float maxLength)
 {
 	int maxCal = 1000;
 	glm::vec3 target = camera.getCoor(), rayDire = camera.Orientation;
@@ -68,13 +68,17 @@ static std::pair<Chunk*,Block*> hitBlock(World& world, camera& camera, float max
 			maxLength -= Zdire;
 		}
 		//std::cout << maxLength << "\n";
-		if (maxLength < 0.0f) return { nullptr,nullptr };
+		if (maxLength < 0.0f)
+		{
+			std::cout << "bruh\n";
+			return { nullptr,nullptr };
+		};
 		block = (world.getChunk(worldCoor(0, 0, 0)))->getBlock(Coor((int)target.x + ((target.x < 0) ? -1 : 0), (int)target.y + ((target.y < 0) ? -1 : 0), (int)target.z + ((target.z < 0) ? -1 : 0)));
 		if (block == nullptr) return { nullptr,nullptr };
-		if (maxCal-- < 0)
+		if (maxCal--< 0)
 		{
-			return { nullptr,nullptr };
 			std::cout << "skull\n";
+			return { nullptr,nullptr };
 		}
 	}
 	if (maxLength > 0.0f) return {world.getChunk(world.inWhatChunk(Coor((int)target.x,(int)target.y,(int)target.z))), block };
@@ -85,9 +89,8 @@ int main()
 {
 	using namespace std;
 	using namespace glm;
-	int sWidth = 1080, sHeight = 720;
 	
-	Window window(sWidth, sHeight, "Main");
+	Window window(1080, 720, "Main");
 	double tStart, tEnd;
 
 	//Shader ShaderProgram("default.vert", "default.frag");
@@ -95,7 +98,7 @@ int main()
 	//Shader ShaderProgram("Voxel.vert", "test.frag", "test.geom");
 	stbi_set_flip_vertically_on_load(true);
 
-	camera Camera(sWidth, sHeight, glm::vec3(10.f));
+	Camera Camera(window, glm::vec3(10.f));
 
 	
 	GLuint cameraID = glGetUniformLocation(ShaderProgram.ID, "camera");
@@ -114,14 +117,13 @@ int main()
 	glUniform3fv(glGetUniformLocation(ShaderProgram.ID, "lCol"), 1, &vec3(1.0f, 1.0f, 1.0f)[0]);
 
 	ShaderProgram.Activate();
-	glfwSetCursorPos(window.getWindow(), (double)sWidth / 2, (double)sHeight / 2);
 	tStart = glfwGetTime();
 
 	
 	atlas.Bind();
 
 	World world(ShaderProgram.ID);
-	world.updataRenderDist(1);
+	world.updataRenderDist(4);
 	world.startLoading();
 	world.updateWorldAnchor(worldCoor(0,0,0));
 
@@ -139,27 +141,28 @@ int main()
 		//world.loadWorld(Camera.getWorldCoor(), 5);
 		//world.reloadWorld();
 
-		world.updateWorldAnchor(Camera.getWorldCoor());
+		//world.updateWorldAnchor(Camera.getWorldCoor());
 		
 		world.pushAllChunk();
 
 		world.renderWorld();
 
-		std::pair<Chunk*, Block*> block = hitBlock(world, Camera, 6.0f);
+		/*std::pair<Chunk*, Block*> block = hitBlock(world, Camera, 6.0f);
 		if (block.second != nullptr)
 		{
-			std::cout << (int)block.second->blockID << " ";
+			
 			if (glfwGetMouseButton(window.getWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 			{
+				std::cout << (int)block.second->blockID << " ";
 				block.second->blockID = 0;
 				block.first->ShouldUpdate = true;
 			}
-		}
+		}*/
 
 		
 
 
-		Camera.cInput(window.getWindow(), tEnd - tStart);
+		Camera.cInput(tEnd - tStart);
 		glUniform3fv(cPosID, 1, &Camera.getCoor()[0]);
 
 		window.update();

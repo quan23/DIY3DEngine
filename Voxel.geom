@@ -71,7 +71,8 @@ void main()
 	for (int i=0;i<4;i++)
 	{
 		fPos = pos.xyz+vertex[indices[face*4+i]];
-		gl_Position = camera*vec4(fPos,1.0f);
+		//gl_Position = camera*vec4(fPos.xyz+cos(vec3(fPos.x+fPos.y,fPos.z+fPos.y,fPos.z+fPos.x))/2.0f,1.0f);
+		gl_Position = camera*vec4(fPos.xyz,1.0f);
 		tPos = (vec2(textID%64,textID/64)+texCoor[i])/64.0f;
 		//tPos = texCoor[i];
 		lVal = light[face];

@@ -9,9 +9,9 @@ class EBO
 		GLuint ID;
 		EBO(GLushort *indices, GLsizeiptr size);
 		
-		void Bind();
-		void Unbind();
-		void Delete();
+		inline void Bind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ID); }
+		inline void Unbind() const { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); }
+		void Delete() const;
 };
 
 #endif
