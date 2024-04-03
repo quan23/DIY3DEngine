@@ -18,10 +18,9 @@ Window::~Window()
 	glfwTerminate();
 }
 
-Window* Window::currentWindow;
-
-void Window::windowSizeCallBack(GLFWwindow* Window, int Width, int Height)
+void Window::windowSizeCallBack(GLFWwindow* window, int Width, int Height)
 {
+	Window* currentWindow = (Window*)glfwGetWindowUserPointer(window);
 	currentWindow->Width = Width;
 	currentWindow->Height = Height;
 	glViewport(0, 0, currentWindow->Width, currentWindow->Height);
@@ -46,7 +45,7 @@ bool Window::init()
 	}
 	glfwMakeContextCurrent(ID);
 	gladLoadGL();
-	currentWindow = this;
+	glfwSetWindowUserPointer(ID, this);
 	glfwSetWindowSizeCallback(ID, Window::windowSizeCallBack);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);

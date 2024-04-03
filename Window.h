@@ -9,8 +9,7 @@ class Window
 public:
 	Window(int Width, int Height, const char* Title);
 	~Window();
-	
-	static Window* currentWindow;
+
 	void update() const;
 	static void windowSizeCallBack(GLFWwindow* window, int width, int height);
 	inline bool shouldClose() const { return glfwWindowShouldClose(ID); }

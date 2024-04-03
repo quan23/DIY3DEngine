@@ -159,7 +159,7 @@ int main()
 			}
 		}*/
 
-		
+		std::cout << window.getHeight() << " " << window.getWidth() << "\n";
 
 
 		Camera.cInput(tEnd - tStart);
