@@ -7,7 +7,7 @@
 struct Coor
 {
 	signed char x, y, z;
-	Coor(signed char x, signed char y, signed char z);
+	Coor(signed char x = 0, signed char y = 0, signed char z = 0) : x(x), y(y), z(z) {}
 	Coor operator+(const Coor& coor) const;
 	bool operator==(const Coor& Coor) const;
 	bool operator!=(const Coor& Coor) const;
@@ -15,10 +15,19 @@ struct Coor
 struct worldCoor
 {
 	int x, y, z;
-	worldCoor(int x = 0, int y = 0, int z = 0);
+	worldCoor(int x = 0, int y = 0, int z = 0) : x(x), y(y), z(z) {}
 	worldCoor operator+(const worldCoor& coor) const;
 	bool operator==(const worldCoor& Coor) const;
 	bool operator!=(const worldCoor& Coor) const;
+};
+struct blockCoor
+{
+	long long x, y, z;
+	blockCoor(long long x = 0, long long y = 0, long long z = 0) : x(x), y(y), z(z) {}
+	blockCoor(Coor coor) : x(coor.x), y(coor.y), z(coor.z) {}
+	blockCoor operator+(const blockCoor& coor) const;
+	bool operator==(const blockCoor& Coor) const;
+	bool operator!=(const blockCoor& Coor) const;
 };
 struct face
 {

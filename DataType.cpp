@@ -1,11 +1,6 @@
 #include "DataType.h"
 
 
-Coor::Coor(signed char x, signed char y, signed char z) : x(x), y(y), z(z)
-{
-
-}
-
 Coor Coor::operator+(const Coor& coor) const
 {
 	return Coor(x+coor.x,y+coor.y,z+coor.z);
@@ -19,11 +14,6 @@ bool Coor::operator==(const Coor& Coor) const
 bool Coor::operator!=(const Coor& Coor) const
 {
 	return !(*this == Coor);
-}
-
-worldCoor::worldCoor(int x, int y, int z) : x(x), y(y), z(z)
-{
-
 }
 
 worldCoor worldCoor::operator+(const worldCoor& coor) const
@@ -41,6 +31,21 @@ bool worldCoor::operator!=(const worldCoor& Coor) const
 	return !(*this == Coor);
 }
 
+blockCoor blockCoor::operator+(const blockCoor& coor) const
+{
+	return blockCoor(x + coor.x, y + coor.y, z + coor.z);
+}
+
+bool blockCoor::operator==(const blockCoor& Coor) const
+{
+	return (x == Coor.x) && (y == Coor.y) && (z == Coor.z);
+}
+
+bool blockCoor::operator!=(const blockCoor& Coor) const
+{
+	return !(*this == Coor);
+}
+
 std::ostream& operator<<(std::ostream& stream, const Coor& coor)
 {
 	stream << (int)coor.x << " " << (int)coor.y << " " << (int)coor.z;
@@ -48,6 +53,11 @@ std::ostream& operator<<(std::ostream& stream, const Coor& coor)
 }
 
 std::ostream& operator<<(std::ostream& stream, const worldCoor& coor)
+{
+	stream << coor.x << " " << coor.y << " " << coor.z;
+	return stream;
+}
+std::ostream& operator<<(std::ostream& stream, const blockCoor& coor)
 {
 	stream << coor.x << " " << coor.y << " " << coor.z;
 	return stream;

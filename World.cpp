@@ -145,14 +145,10 @@ Chunk* World::getChunk(worldCoor coor)
 	return worldMap[ChunkPos(coor)];
 }
 
-worldCoor World::inWhatChunk(int x, int y, int z)
+Block* World::getBlock(blockCoor coor)
 {
-	return worldCoor(x / CHUNK_WIDTH + ((x < 0) ? -1 : 0), y / CHUNK_HEIGHT + ((y < 0) ? -1 : 0), z / CHUNK_LENGTH + ((z < 0) ? -1 : 0));
-}
-
-worldCoor World::inWhatChunk(Coor coor)
-{
-	return inWhatChunk(coor.x, coor.y, coor.z);
+	if (worldMap[ChunkPos(inWhatChunk(coor))] == nullptr) return nullptr;
+	return worldMap[ChunkPos(inWhatChunk(coor))]->getBlock(Chunk::inBoundary(coor));
 }
 
 void World::startLoading()
@@ -181,16 +177,6 @@ void World::pushAllChunk()
 		ChunkToPush.front()->Calculating = false;
 		ChunkToPush.pop();
 	}
-}
-
-void World::updateWorldAnchor(worldCoor newAnchor)
-{
-	worldAnchor = newAnchor;
-}
-
-void World::updataRenderDist(int renderDist)
-{
-	this->renderDist = renderDist;
 }
 
 void World::loadingLoop()
