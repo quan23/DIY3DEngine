@@ -57,6 +57,7 @@ std::ostream& operator<<(std::ostream& stream, const worldCoor& coor)
 	stream << coor.x << " " << coor.y << " " << coor.z;
 	return stream;
 }
+
 std::ostream& operator<<(std::ostream& stream, const blockCoor& coor)
 {
 	stream << coor.x << " " << coor.y << " " << coor.z;

@@ -56,6 +56,7 @@ class Chunk
 		VAO* _VAO = nullptr;
 		VBO* _VBO = nullptr;
 		EBO* _EBO = nullptr;
+
 };
 
 

@@ -27,61 +27,97 @@ static void checkerror()
 	std::cout << "\n";
 }
 
+static GLfloat max(GLfloat x, GLfloat y)
+{
+	return (x > y) ? x : y;
+}
+
 static float min(float x, float y)
 {
 	if (x > y) return y;
 	else return x;
 }
 
-static std::pair<Chunk*,Block*> hitBlock(World& world, Camera& camera, float maxLength)
+static std::pair<Chunk*, Block*> hitBlock(World& world, Camera& camera, float maxLength)
 {
 	int maxCal = 1000;
-	glm::vec3 target = camera.getCoor(), rayDire = camera.Orientation;
-	if (world.getChunk(worldCoor(0, 0, 0)) == nullptr) return { nullptr,nullptr };
-	Block* block = (world.getChunk(worldCoor(0, 0, 0)))->getBlock(Coor((int)target.x + ((target.x < 0) ? -1 : 0), (int)target.y + ((target.y < 0) ? -1 : 0), (int)target.z + ((target.z < 0) ? -1 : 0)));
+	glm::vec3 target = camera.getCoor(), rayDire = camera.Orientation, stepNeed = glm::vec3(0.0f);
+	auto inBoundOf = [](glm::vec3 coor)
+	{
+		return blockCoor(int(coor.x) + ((coor.x < 0.0f) ? -1 : 0), int(coor.y) + ((coor.y < 0.0f) ? -1 : 0), int(coor.z) + ((coor.z < 0.0f) ? -1 : 0));
+	};
+	//if (world.getChunk(worldCoor(0, 0, 0)) == nullptr) return { nullptr,nullptr };
+	blockCoor targetBlock = inBoundOf(target);
+	Block* block = world.getBlock(targetBlock);
 	if (block == nullptr) return { nullptr,nullptr };
-	//std::cout << rayDire.x << " " << rayDire.y << " " << rayDire.z << "\n";
+	Coor nextBlock;
+	auto checkDire = [](GLfloat rayDire, signed char& nextBlock, int targetBlock, GLfloat& stepNeed, GLfloat target)
+	{
+		if (rayDire == 0.0f)
+			nextBlock = 0;
+		else if (rayDire < 0.0f)
+			nextBlock = -1;
+		else nextBlock = 1;
+		if (nextBlock != 0) stepNeed = abs(max(target - (targetBlock + nextBlock + 1), (targetBlock + nextBlock) - target) / rayDire);
+		else stepNeed = 9999.0f;
+	};
+	checkDire(rayDire.x, nextBlock.x, targetBlock.x , stepNeed.x, target.x);
+	checkDire(rayDire.y, nextBlock.y, targetBlock.y , stepNeed.y, target.y);
+	checkDire(rayDire.z, nextBlock.z, targetBlock.z , stepNeed.z, target.z);
 	while (maxLength > 0.0f && block->blockID == 0)
 	{
-		float Xdire = abs((target.x > 0.0f) ? ((int)target.x - target.x + ((rayDire.x > 0.0f) ? 0 : 1)) : (target.x - (int)target.x + ((rayDire.x > 0.0f) ? 0 : 1)));
-		float Ydire = abs((target.y > 0.0f) ? ((int)target.y - target.y + ((rayDire.y > 0.0f) ? 0 : 1)) : (target.y - (int)target.y + ((rayDire.y > 0.0f) ? 0 : 1)));
-		float Zdire = abs((target.z > 0.0f) ? ((int)target.z - target.z + ((rayDire.z > 0.0f) ? 0 : 1)) : (target.z - (int)target.z + ((rayDire.z > 0.0f) ? 0 : 1)));
-		if (rayDire.x != 0.0f) Xdire /= abs(rayDire.x);
-		else Xdire = 999.0f;
-		if (rayDire.y != 0.0f) Ydire /= abs(rayDire.y);
-		else Ydire = 999.0f;
-		if (rayDire.z != 0.0f) Zdire /= abs(rayDire.z);
-		else Zdire = 999.0f;
-		if (Xdire < min(Ydire, Zdire))
+		if (nextBlock.x != 0 && (stepNeed.x < stepNeed.y && stepNeed.x < stepNeed.z))
 		{
-			target += rayDire * Xdire;
-			maxLength -= Xdire;
+			target += rayDire * glm::vec3(stepNeed.x);
+			maxLength -= stepNeed.x;
+			stepNeed -= glm::vec3(stepNeed.x);
+			//targetBlock = inBoundOf(target);
+			targetBlock.x += nextBlock.x;
+			stepNeed.x = abs(max(target.x - (targetBlock.x + nextBlock.x + 1), (targetBlock.x + nextBlock.x) - target.x)/rayDire.x);
 		}
-		else if (Ydire < min(Xdire, Zdire))
+		else if (nextBlock.y != 0 && (stepNeed.y < stepNeed.x && stepNeed.y < stepNeed.z))
 		{
-			target += rayDire * Ydire;
-			maxLength -= Ydire;
+			target += rayDire * glm::vec3(stepNeed.y);
+			maxLength -= stepNeed.y;
+			stepNeed -= glm::vec3(stepNeed.y);
+			//targetBlock = inBoundOf(target);
+			targetBlock.y += nextBlock.y;
+			stepNeed.y = abs(max(target.y - (targetBlock.y + nextBlock.y + 1), (targetBlock.y + nextBlock.y) - target.y) / rayDire.y);
 		}
-		else
+		else if (nextBlock.z != 0 && (stepNeed.z < stepNeed.y && stepNeed.z < stepNeed.x))
 		{
-			target += rayDire * Zdire;
-			maxLength -= Zdire;
+			target += rayDire * glm::vec3(stepNeed.z);
+			maxLength -= stepNeed.z;
+			stepNeed -= glm::vec3(stepNeed.z);
+			//targetBlock = inBoundOf(target);
+			targetBlock.z += nextBlock.z;
+			stepNeed.z = abs(max(target.z - (targetBlock.z + nextBlock.z + 1), (targetBlock.z + nextBlock.z) - target.z) / rayDire.z);
 		}
+		
 		//std::cout << maxLength << "\n";
 		if (maxLength < 0.0f)
 		{
-			std::cout << "bruh\n";
+			//std::cout << "bruh\n";
+			//std::cout << target.x << " " << target.y << " " << target.z << " " << targetBlock << "out\n";
+
 			return { nullptr,nullptr };
 		};
-		block = (world.getChunk(worldCoor(0, 0, 0)))->getBlock(Coor((int)target.x + ((target.x < 0) ? -1 : 0), (int)target.y + ((target.y < 0) ? -1 : 0), (int)target.z + ((target.z < 0) ? -1 : 0)));
-		if (block == nullptr) return { nullptr,nullptr };
-		if (maxCal--< 0)
+		block = world.getBlock(targetBlock);
+		if (block == nullptr)
 		{
-			std::cout << "skull\n";
+			//std::cout << target.x << " " << target.y << " " << target.z << targetBlock << "null\n";
 			return { nullptr,nullptr };
 		}
+		if (maxCal--< 0)
+		{
+			//std::cout << target.x << " " << target.y << " " << target.z << targetBlock << "skull\n";
+			std::cout << "skull ";
+			return { nullptr,nullptr };
+		}
+		
 	}
-	if (maxLength > 0.0f) return {world.getChunk(world.inWhatChunk(Coor((int)target.x,(int)target.y,(int)target.z))), block };
+	//std::cout << target.x << " " << target.y << " " << target.z << targetBlock << "hit\n";
+	if (maxLength > 0.0f) return {world.getChunk(World::inWhatChunk(targetBlock)), block };
 	else return { nullptr,nullptr };
 }
 
@@ -118,7 +154,6 @@ int main()
 
 	ShaderProgram.Activate();
 	tStart = glfwGetTime();
-
 	
 	atlas.Bind();
 
@@ -147,7 +182,7 @@ int main()
 
 		world.renderWorld();
 
-		/*std::pair<Chunk*, Block*> block = hitBlock(world, Camera, 6.0f);
+		std::pair<Chunk*, Block*> block = hitBlock(world, Camera, 6.0f);
 		if (block.second != nullptr)
 		{
 			
@@ -157,10 +192,7 @@ int main()
 				block.second->blockID = 0;
 				block.first->ShouldUpdate = true;
 			}
-		}*/
-
-		std::cout << window.getHeight() << " " << window.getWidth() << "\n";
-
+		}
 
 		Camera.cInput(tEnd - tStart);
 		glUniform3fv(cPosID, 1, &Camera.getCoor()[0]);

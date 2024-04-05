@@ -52,6 +52,7 @@ struct pixel
 
 std::ostream& operator<<(std::ostream& stream, const Coor& coor);
 std::ostream& operator<<(std::ostream& stream, const worldCoor& coor);
+std::ostream& operator<<(std::ostream& stream, const blockCoor& coor);
 
 template <>
 struct std::hash<worldCoor>
