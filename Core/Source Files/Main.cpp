@@ -66,7 +66,7 @@ static std::pair<Chunk*, Block*> hitBlock(World& world, Camera& camera, float ma
 	checkDire(rayDire.z, nextBlock.z, targetBlock.z , stepNeed.z, target.z);
 	while (maxLength > 0.0f && block->blockID == 0)
 	{
-		if (nextBlock.x != 0 && (stepNeed.x < stepNeed.y && stepNeed.x < stepNeed.z))
+		if (nextBlock.x != 0 && (stepNeed.x <= stepNeed.y && stepNeed.x <= stepNeed.z))
 		{
 			target += rayDire * glm::vec3(stepNeed.x);
 			maxLength -= stepNeed.x;
@@ -75,7 +75,7 @@ static std::pair<Chunk*, Block*> hitBlock(World& world, Camera& camera, float ma
 			targetBlock.x += nextBlock.x;
 			stepNeed.x = abs(max(target.x - (targetBlock.x + nextBlock.x + 1), (targetBlock.x + nextBlock.x) - target.x)/rayDire.x);
 		}
-		else if (nextBlock.y != 0 && (stepNeed.y < stepNeed.x && stepNeed.y < stepNeed.z))
+		else if (nextBlock.y != 0 && (stepNeed.y <= stepNeed.x && stepNeed.y <= stepNeed.z))
 		{
 			target += rayDire * glm::vec3(stepNeed.y);
 			maxLength -= stepNeed.y;
@@ -84,7 +84,7 @@ static std::pair<Chunk*, Block*> hitBlock(World& world, Camera& camera, float ma
 			targetBlock.y += nextBlock.y;
 			stepNeed.y = abs(max(target.y - (targetBlock.y + nextBlock.y + 1), (targetBlock.y + nextBlock.y) - target.y) / rayDire.y);
 		}
-		else if (nextBlock.z != 0 && (stepNeed.z < stepNeed.y && stepNeed.z < stepNeed.x))
+		else if (nextBlock.z != 0 && (stepNeed.z <= stepNeed.y && stepNeed.z <= stepNeed.x))
 		{
 			target += rayDire * glm::vec3(stepNeed.z);
 			maxLength -= stepNeed.z;
@@ -111,7 +111,8 @@ static std::pair<Chunk*, Block*> hitBlock(World& world, Camera& camera, float ma
 		if (maxCal--< 0)
 		{
 			//std::cout << target.x << " " << target.y << " " << target.z << targetBlock << "skull\n";
-			std::cout << "skull ";
+			//std::cout << "skull ";
+			std::cout << rayDire.x << " " << rayDire.y << " " << rayDire.z << "skull\n";
 			return { nullptr,nullptr };
 		}
 		
@@ -130,7 +131,7 @@ int main()
 	double tStart, tEnd;
 
 	//Shader ShaderProgram("default.vert", "default.frag");
-	Shader ShaderProgram("Voxel.vert", "default.frag", "Voxel.geom");
+	Shader ShaderProgram("Core/Resource Files/Shaders/Voxel.vert", "Core/Resource Files/Shaders/default.frag", "Core/Resource Files/Shaders/Voxel.geom");
 	//Shader ShaderProgram("Voxel.vert", "test.frag", "test.geom");
 	stbi_set_flip_vertically_on_load(true);
 

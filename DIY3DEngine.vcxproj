@@ -99,6 +99,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Core\Header Files\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,6 +117,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Core\Header Files\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,6 +135,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Core\Header Files\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,6 +153,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Core\Header Files\;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -168,47 +172,47 @@
     <Image Include="pop_cat.png" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Block.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Chunk.cpp" />
-    <ClCompile Include="Cube.cpp" />
-    <ClCompile Include="DataType.cpp" />
-    <ClCompile Include="EBO.cpp" />
-    <ClCompile Include="glad.c" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="ShaderClass.cpp" />
-    <ClCompile Include="stb.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="TextureAtlas.cpp" />
-    <ClCompile Include="VAO.cpp" />
-    <ClCompile Include="VBO.cpp" />
-    <ClCompile Include="Window.cpp" />
-    <ClCompile Include="World.cpp" />
+    <ClInclude Include="Core\Header Files\Block.h" />
+    <ClInclude Include="Core\Header Files\Camera.h" />
+    <ClInclude Include="Core\Header Files\Chunk.h" />
+    <ClInclude Include="Core\Header Files\Cube.h" />
+    <ClInclude Include="Core\Header Files\DataType.h" />
+    <ClInclude Include="Core\Header Files\EBO.h" />
+    <ClInclude Include="Core\Header Files\resource.h" />
+    <ClInclude Include="Core\Header Files\ShaderClass.h" />
+    <ClInclude Include="Core\Header Files\Texture.h" />
+    <ClInclude Include="Core\Header Files\TextureAtlas.h" />
+    <ClInclude Include="Core\Header Files\VAO.h" />
+    <ClInclude Include="Core\Header Files\VBO.h" />
+    <ClInclude Include="Core\Header Files\Window.h" />
+    <ClInclude Include="Core\Header Files\World.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="default.frag" />
-    <None Include="default.vert" />
-    <None Include="test.frag" />
-    <None Include="test.geom" />
-    <None Include="test.vert" />
-    <None Include="Voxel.geom" />
-    <None Include="Voxel.vert" />
+    <ClCompile Include="Core\Source Files\Block.cpp" />
+    <ClCompile Include="Core\Source Files\Camera.cpp" />
+    <ClCompile Include="Core\Source Files\Chunk.cpp" />
+    <ClCompile Include="Core\Source Files\Cube.cpp" />
+    <ClCompile Include="Core\Source Files\DataType.cpp" />
+    <ClCompile Include="Core\Source Files\EBO.cpp" />
+    <ClCompile Include="Core\Source Files\glad.c" />
+    <ClCompile Include="Core\Source Files\Main.cpp" />
+    <ClCompile Include="Core\Source Files\ShaderClass.cpp" />
+    <ClCompile Include="Core\Source Files\stb.cpp" />
+    <ClCompile Include="Core\Source Files\Texture.cpp" />
+    <ClCompile Include="Core\Source Files\TextureAtlas.cpp" />
+    <ClCompile Include="Core\Source Files\VAO.cpp" />
+    <ClCompile Include="Core\Source Files\VBO.cpp" />
+    <ClCompile Include="Core\Source Files\Window.cpp" />
+    <ClCompile Include="Core\Source Files\World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Block.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Chunk.h" />
-    <ClInclude Include="Cube.h" />
-    <ClInclude Include="DataType.h" />
-    <ClInclude Include="EBO.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="ShaderClass.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="TextureAtlas.h" />
-    <ClInclude Include="VAO.h" />
-    <ClInclude Include="VBO.h" />
-    <ClInclude Include="Window.h" />
-    <ClInclude Include="World.h" />
+    <None Include="Core\Resource Files\Shaders\default.frag" />
+    <None Include="Core\Resource Files\Shaders\default.vert" />
+    <None Include="Core\Resource Files\Shaders\test.frag" />
+    <None Include="Core\Resource Files\Shaders\test.geom" />
+    <None Include="Core\Resource Files\Shaders\test.vert" />
+    <None Include="Core\Resource Files\Shaders\Voxel.geom" />
+    <None Include="Core\Resource Files\Shaders\Voxel.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
