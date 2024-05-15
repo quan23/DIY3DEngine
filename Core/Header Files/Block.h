@@ -25,8 +25,8 @@ class Block
 		char blockID;
 		Block(char blockID = 0);
 		//static face getFace(faceID face);
-		void getFace(Chunk& chunk, Coor coor) const;
-		void getVoxelFace(Chunk& chunk, Coor coor) const;
+		void getFace(Chunk& chunk, blockCoor coor) const;
+		void getVoxelFace(Chunk& chunk, blockCoor coor) const;
 	private:
 
 };

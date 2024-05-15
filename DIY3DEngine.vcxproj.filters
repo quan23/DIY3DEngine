@@ -133,6 +133,9 @@
     <ClCompile Include="Core\Source Files\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Resource Files\Shaders\default.frag">

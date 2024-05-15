@@ -27,17 +27,6 @@ static void checkerror()
 	std::cout << "\n";
 }
 
-static GLfloat max(GLfloat x, GLfloat y)
-{
-	return (x > y) ? x : y;
-}
-
-static float min(float x, float y)
-{
-	if (x > y) return y;
-	else return x;
-}
-
 static std::pair<Chunk*, Block*> hitBlock(World& world, Camera& camera, float maxLength)
 {
 	int maxCal = 1000;
@@ -50,15 +39,15 @@ static std::pair<Chunk*, Block*> hitBlock(World& world, Camera& camera, float ma
 	blockCoor targetBlock = inBoundOf(target);
 	Block* block = world.getBlock(targetBlock);
 	if (block == nullptr) return { nullptr,nullptr };
-	Coor nextBlock;
-	auto checkDire = [](GLfloat rayDire, signed char& nextBlock, int targetBlock, GLfloat& stepNeed, GLfloat target)
+	blockCoor nextBlock;
+	auto checkDire = [](GLfloat rayDire, long long& nextBlock, int targetBlock, GLfloat& stepNeed, GLfloat target)
 	{
 		if (rayDire == 0.0f)
 			nextBlock = 0;
 		else if (rayDire < 0.0f)
 			nextBlock = -1;
 		else nextBlock = 1;
-		if (nextBlock != 0) stepNeed = abs(max(target - (targetBlock + nextBlock + 1), (targetBlock + nextBlock) - target) / rayDire);
+		if (nextBlock != 0) stepNeed = abs(std::max(target - (targetBlock + nextBlock + 1), (targetBlock + nextBlock) - target) / rayDire);
 		else stepNeed = 9999.0f;
 	};
 	checkDire(rayDire.x, nextBlock.x, targetBlock.x , stepNeed.x, target.x);
@@ -73,7 +62,7 @@ static std::pair<Chunk*, Block*> hitBlock(World& world, Camera& camera, float ma
 			stepNeed -= glm::vec3(stepNeed.x);
 			//targetBlock = inBoundOf(target);
 			targetBlock.x += nextBlock.x;
-			stepNeed.x = abs(max(target.x - (targetBlock.x + nextBlock.x + 1), (targetBlock.x + nextBlock.x) - target.x)/rayDire.x);
+			stepNeed.x = abs(std::max(target.x - (targetBlock.x + nextBlock.x + 1), (targetBlock.x + nextBlock.x) - target.x)/rayDire.x);
 		}
 		else if (nextBlock.y != 0 && (stepNeed.y <= stepNeed.x && stepNeed.y <= stepNeed.z))
 		{
@@ -82,7 +71,7 @@ static std::pair<Chunk*, Block*> hitBlock(World& world, Camera& camera, float ma
 			stepNeed -= glm::vec3(stepNeed.y);
 			//targetBlock = inBoundOf(target);
 			targetBlock.y += nextBlock.y;
-			stepNeed.y = abs(max(target.y - (targetBlock.y + nextBlock.y + 1), (targetBlock.y + nextBlock.y) - target.y) / rayDire.y);
+			stepNeed.y = abs(std::max(target.y - (targetBlock.y + nextBlock.y + 1), (targetBlock.y + nextBlock.y) - target.y) / rayDire.y);
 		}
 		else if (nextBlock.z != 0 && (stepNeed.z <= stepNeed.y && stepNeed.z <= stepNeed.x))
 		{
@@ -91,7 +80,7 @@ static std::pair<Chunk*, Block*> hitBlock(World& world, Camera& camera, float ma
 			stepNeed -= glm::vec3(stepNeed.z);
 			//targetBlock = inBoundOf(target);
 			targetBlock.z += nextBlock.z;
-			stepNeed.z = abs(max(target.z - (targetBlock.z + nextBlock.z + 1), (targetBlock.z + nextBlock.z) - target.z) / rayDire.z);
+			stepNeed.z = abs(std::max(target.z - (targetBlock.z + nextBlock.z + 1), (targetBlock.z + nextBlock.z) - target.z) / rayDire.z);
 		}
 		
 		//std::cout << maxLength << "\n";
@@ -118,6 +107,7 @@ static std::pair<Chunk*, Block*> hitBlock(World& world, Camera& camera, float ma
 		
 	}
 	//std::cout << target.x << " " << target.y << " " << target.z << targetBlock << "hit\n";
+	std::cout << targetBlock << "\n";
 	if (maxLength > 0.0f) return {world.getChunk(World::inWhatChunk(targetBlock)), block };
 	else return { nullptr,nullptr };
 }
@@ -161,7 +151,8 @@ int main()
 	World world(ShaderProgram.ID);
 	world.updataRenderDist(4);
 	world.startLoading();
-	world.updateWorldAnchor(worldCoor(0,0,0));
+	world.updateWorldAnchor(worldCoor(0, 0, 0));
+	
 
 	Camera.setSpeed(10.0f);
 
@@ -183,15 +174,19 @@ int main()
 
 		world.renderWorld();
 
-		std::pair<Chunk*, Block*> block = hitBlock(world, Camera, 6.0f);
-		if (block.second != nullptr)
+		
+		//if (block.second != nullptr)
 		{
 			
 			if (glfwGetMouseButton(window.getWindow(), GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 			{
-				std::cout << (int)block.second->blockID << " ";
-				block.second->blockID = 0;
-				block.first->ShouldUpdate = true;
+				std::pair<Chunk*, Block*> block = hitBlock(world, Camera, 6.0f);
+				if (block.second != nullptr)
+				{
+					std::cout << (int)block.second->blockID << " ";
+					block.second->blockID = 0;
+					block.first->ShouldUpdate = true;
+				}
 			}
 		}
 

@@ -25,7 +25,7 @@ class World
 		Block* getBlock(blockCoor coor);
 
 		inline static worldCoor inWhatChunk(int x, int y, int z) { return worldCoor(x / CHUNK_WIDTH + ((x < 0) ? -1 : 0), y / CHUNK_HEIGHT + ((y < 0) ? -1 : 0), z / CHUNK_LENGTH + ((z < 0) ? -1 : 0)); }
-		inline static worldCoor inWhatChunk(Coor coor) { return inWhatChunk(coor.x, coor.y, coor.z); }
+		//inline static worldCoor inWhatChunk(Coor coor) { return inWhatChunk(coor.x, coor.y, coor.z); }
 		inline static worldCoor inWhatChunk(blockCoor coor) { return inWhatChunk(coor.x, coor.y, coor.z); }
 
 		GLuint ShaderProgram;
