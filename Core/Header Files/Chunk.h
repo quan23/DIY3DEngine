@@ -37,11 +37,19 @@ class Chunk
 
 		Chunk(int x, int y, int z, World* world);
 		~Chunk();
-
-		inline static blockCoor inBoundary(blockCoor coor) { return blockCoor((coor.x % CHUNK_WIDTH + CHUNK_WIDTH) % CHUNK_WIDTH, (coor.y % CHUNK_HEIGHT + CHUNK_HEIGHT) % CHUNK_HEIGHT, (coor.z % CHUNK_LENGTH + CHUNK_LENGTH) % CHUNK_LENGTH); }
-		inline static unsigned int Coor2Pos(blockCoor coor) { return (coor.x + (coor.y * CHUNK_WIDTH + coor.z) * CHUNK_LENGTH); }
-		inline static unsigned int Coor2Pos(Coor coor) { return (coor.x + (coor.y * CHUNK_WIDTH + coor.z) * CHUNK_LENGTH); }
-		inline static blockCoor Pos2Coor(unsigned int pos) { return blockCoor(char((pos % (CHUNK_WIDTH * CHUNK_LENGTH)) % CHUNK_WIDTH), char(pos / (CHUNK_WIDTH * CHUNK_LENGTH)), char((pos % (CHUNK_WIDTH * CHUNK_LENGTH)) / CHUNK_LENGTH)); }
+		
+		static blockCoor inBoundary(blockCoor coor) 
+		{ 
+			return blockCoor
+			(
+				(coor.x % CHUNK_WIDTH + CHUNK_WIDTH) % CHUNK_WIDTH,
+				(coor.y % CHUNK_HEIGHT + CHUNK_HEIGHT) % CHUNK_HEIGHT, 
+				(coor.z % CHUNK_LENGTH + CHUNK_LENGTH) % CHUNK_LENGTH
+			); 
+		}
+	    static unsigned int Coor2Pos(blockCoor coor) { return (coor.x + (coor.y * CHUNK_WIDTH + coor.z) * CHUNK_LENGTH); }
+		static unsigned int Coor2Pos(Coor coor) { return (coor.x + (coor.y * CHUNK_WIDTH + coor.z) * CHUNK_LENGTH); }
+		static blockCoor Pos2Coor(unsigned int pos) { return blockCoor(char((pos % (CHUNK_WIDTH * CHUNK_LENGTH)) % CHUNK_WIDTH), char(pos / (CHUNK_WIDTH * CHUNK_LENGTH)), char((pos % (CHUNK_WIDTH * CHUNK_LENGTH)) / CHUNK_LENGTH)); }
 
 		void updateFace();
 		void render(GLuint ShaderProgram) const;
@@ -61,6 +69,4 @@ class Chunk
 		EBO* _EBO = nullptr;
 
 };
-
-
 #endif

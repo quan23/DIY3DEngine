@@ -218,10 +218,7 @@ Block* Chunk::getBlock(blockCoor coor) const
 	if (EmptyChunk) return nullptr;
 	if ((coor.x < 0) || (coor.x >= CHUNK_WIDTH) || (coor.y < 0) || (coor.y >= CHUNK_HEIGHT) || (coor.z < 0) || (coor.z >= CHUNK_LENGTH))
 	{
-		worldCoor wCoor = ChunkCoor;
-		wCoor.x += (coor.x / CHUNK_WIDTH + ((coor.x < 0) ? -1 : 0));
-		wCoor.y += (coor.y / CHUNK_HEIGHT + ((coor.y < 0) ? -1 : 0));
-		wCoor.z += (coor.z / CHUNK_LENGTH + ((coor.z < 0) ? -1 : 0));
+		worldCoor wCoor = ChunkCoor + World::inWhatChunk(coor);
 		if (world->getChunk(wCoor) != nullptr)
 			return (world->getChunk(wCoor)->getBlock(inBoundary(coor)));
 		else return nullptr;
